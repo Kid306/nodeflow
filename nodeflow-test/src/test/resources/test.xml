@@ -11,6 +11,7 @@
 	</nodes>
 
 	<chain name="chain1">
+		<aaa name="张三">哇咔哇咔</aaa>
 		<then value="a,c"/>
 		<when value="b,d,e(f|g)"/>
 		<then value="chain2"/>

@@ -19,6 +19,8 @@
     <spring-beans.version>5.0.9.RELEASE</spring-beans.version>
     <hutool-core.version>5.8.8</hutool-core.version>
     <junit4.version>4.13.2</junit4.version>
+    <org.slf4j.version>1.7.32</org.slf4j.version>
+    <logback.version>1.2.3</logback.version>
   </properties>
 
 
@@ -41,6 +43,18 @@
         <groupId>cn.hutool</groupId>
         <artifactId>hutool-core</artifactId>
         <version>${hutool-core.version}</version>
+      </dependency>
+      <!--slf日志门面-->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${org.slf4j.version}</version>
+      </dependency>
+      <!--logback日志核心 -->
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>${logback.version}</version>
       </dependency>
       <!--junit4-->
       <dependency>

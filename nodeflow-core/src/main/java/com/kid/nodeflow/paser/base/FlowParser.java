@@ -13,5 +13,6 @@ public interface FlowParser {
 	/**
 	 * 解析文本文件
 	 */
-	public void parse(List<String> contents);
+	public void parse(List<String> contents) throws Exception;
+
 }
