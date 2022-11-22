@@ -7,7 +7,6 @@ package com.kid.nodeflow.common;
  * @version 1.0
  */
 public class BaseConstant {
-	public static final String FLOW = "flow";
 
 	public static final String NODES = "nodes";
 
@@ -22,4 +21,6 @@ public class BaseConstant {
 	public static final String CHAIN = "chain";
 
 	public static final String COMP_PACKAGE = "com.kid.nodeflow.core.component";
+
+	public static final Integer DEFAULT_SLOTS_SIZE = 1024;
 }

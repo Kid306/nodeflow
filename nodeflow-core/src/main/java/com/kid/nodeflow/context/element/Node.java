@@ -1,4 +1,4 @@
-package com.kid.nodeflow.execute.element;
+package com.kid.nodeflow.context.element;
 
 import com.kid.nodeflow.enums.NodeType;
 
@@ -16,6 +16,9 @@ public class Node implements Executable {
 
 	private NodeType type;
 
+	/**
+	 * Node的执行方法，所有的Executable对象的执行操作都会到这个方法上来
+	 */
 	@Override
 	public void execute() {
 

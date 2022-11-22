@@ -3,8 +3,8 @@ package com.kid.nodeflow.paser.helper;
 import static com.kid.nodeflow.common.BaseConstant.COMP_PACKAGE;
 
 import cn.hutool.core.util.StrUtil;
-import com.kid.nodeflow.build.NodeBuilder;
-import com.kid.nodeflow.build.entity.NodeProp;
+import com.kid.nodeflow.builder.NodeBuilder;
+import com.kid.nodeflow.builder.entity.NodeProp;
 import com.kid.nodeflow.enums.NodeType;
 import com.kid.nodeflow.exception.NodeClassNotFoundException;
 import java.util.List;

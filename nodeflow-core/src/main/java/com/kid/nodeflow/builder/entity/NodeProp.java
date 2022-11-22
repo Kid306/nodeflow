@@ -1,4 +1,4 @@
-package com.kid.nodeflow.build.entity;
+package com.kid.nodeflow.builder.entity;
 
 /**
  * 用于Node的数据传递类

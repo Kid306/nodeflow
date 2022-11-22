@@ -8,7 +8,7 @@ import static com.kid.nodeflow.common.BaseConstant.NODE;
 import static com.kid.nodeflow.common.BaseConstant.NODES;
 
 import cn.hutool.core.collection.CollUtil;
-import com.kid.nodeflow.build.entity.NodeProp;
+import com.kid.nodeflow.builder.entity.NodeProp;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
