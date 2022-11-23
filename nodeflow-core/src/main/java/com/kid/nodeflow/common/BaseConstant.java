@@ -14,11 +14,14 @@ public class BaseConstant {
 
 	public static final String NODE = "node";
 
+	public static final String CHAIN = "chain";
+
 	public static final String ID = "id";
 
 	public static final String CLASS = "class";
 
-	public static final String CHAIN = "chain";
+	public static final String VALUE = "value";
+
 
 	public static final String COMP_PACKAGE = "com.kid.nodeflow.core.component";
 

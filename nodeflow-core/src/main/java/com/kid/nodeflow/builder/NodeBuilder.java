@@ -2,10 +2,10 @@ package com.kid.nodeflow.builder;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.kid.nodeflow.enums.NodeType;
-import com.kid.nodeflow.exception.NodeBuildException;
 import com.kid.nodeflow.context.FlowBus;
 import com.kid.nodeflow.context.element.Node;
+import com.kid.nodeflow.enums.NodeType;
+import com.kid.nodeflow.exception.rt.NodeBuildException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class NodeBuilder {
 
-	private Node node;
+	private final Node node;
 
 	private NodeBuilder() {
 		this.node = new Node();
@@ -37,19 +37,24 @@ public class NodeBuilder {
 		// build前的简单检查
 		checkBuild();
 		// 向FlowBus中添加Node
-		FlowBus.addNode(node.getId(), node.getClazz(), node.getType());
+		FlowBus.addNode(node);
 	}
 
 	private void checkBuild() {
-		List<String> errorInfos = new ArrayList<>();
+		boolean isError = StrUtil.isBlank(node.getId()) || node.getClazz() == null || node.getType() == null;
+		List<String> errorInfos = null;
+		if (!isError) {
+			return;
+		}
+		errorInfos = new ArrayList<>();
 		if (StrUtil.isBlank(node.getId())) {
-			errorInfos.add("node id is blank");
+			errorInfos.add("node's id is blank");
 		}
 		if (node.getClazz() == null) {
-			errorInfos.add("node class is null");
+			errorInfos.add("node's class is null");
 		}
 		if (node.getType() == null) {
-			errorInfos.add("node type is null");
+			errorInfos.add("node's type is null");
 		}
 		throw new NodeBuildException(CollUtil.join(errorInfos, ", ", "[", "]"));
 	}

@@ -19,6 +19,14 @@ public class Chain implements Executable {
 	 */
 	private List<Flow> flowList;
 
+	public Chain() {
+	}
+
+	public Chain(String id, List<Flow> flowList) {
+		this.id = id;
+		this.flowList = flowList;
+	}
+
 	/**
 	 * Chain的执行方法
 	 */
@@ -33,6 +41,15 @@ public class Chain implements Executable {
 
 	public Chain setId(String id) {
 		this.id = id;
+		return this;
+	}
+
+	public List<Flow> getFlowList() {
+		return flowList;
+	}
+
+	public Chain setFlowList(List<Flow> flowList) {
+		this.flowList = flowList;
 		return this;
 	}
 }

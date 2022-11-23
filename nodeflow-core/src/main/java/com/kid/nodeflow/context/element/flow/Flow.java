@@ -1,8 +1,9 @@
 package com.kid.nodeflow.context.element.flow;
 
-import com.kid.nodeflow.enums.FlowType;
+import cn.hutool.core.collection.CollUtil;
 import com.kid.nodeflow.context.element.Executable;
-import java.util.LinkedList;
+import com.kid.nodeflow.enums.FlowType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,8 +19,33 @@ import java.util.List;
 public abstract class Flow implements Executable {
 
 	// 所包含的可执行节点
-	protected List<Executable> subFlow = new LinkedList<>();
+	protected List<Executable> executableList;
 
 	// 由特定的实现类进行实现
 	public abstract FlowType getFlowType();
+
+	/**
+	 * 初始化方法
+	 */
+	public void init() {
+		this.executableList = new ArrayList<>();
+	}
+
+	public boolean addExecutable(List<Executable> executables) {
+		if (CollUtil.isNotEmpty(executableList) && CollUtil.isNotEmpty(executables)) {
+			executableList.addAll(executables);
+			return true;
+		}
+		return false;
+	}
+
+	public List<Executable> getExecutableList() {
+		return executableList;
+	}
+
+	public Flow setExecutableList(
+			List<Executable> executableList) {
+		this.executableList = executableList;
+		return this;
+	}
 }

@@ -1,12 +1,16 @@
 package com.kid.nodeflow.paser.helper;
 
 import static com.kid.nodeflow.common.BaseConstant.COMP_PACKAGE;
+import static com.kid.nodeflow.enums.FlowType.FLOW_THEN;
 
 import cn.hutool.core.util.StrUtil;
 import com.kid.nodeflow.builder.NodeBuilder;
 import com.kid.nodeflow.builder.entity.NodeProp;
+import com.kid.nodeflow.context.element.Executable;
+import com.kid.nodeflow.context.element.flow.Flow;
 import com.kid.nodeflow.enums.NodeType;
-import com.kid.nodeflow.exception.NodeClassNotFoundException;
+import com.kid.nodeflow.exception.rt.UnInitializedFlowException;
+import com.kid.nodeflow.exception.rt.NodeClassNotFoundException;
 import java.util.List;
 import java.util.function.Consumer;
 import org.dom4j.Document;
@@ -68,10 +72,27 @@ public class ParserHelper {
 		}
 	}
 
+	/**
+	 * 相邻Flow的合并逻辑
+	 */
+	public static void mergeFlow(Flow flow, List<Executable> executableList) {
+		// TODO 这里仅仅考虑了ThenFlow的合并逻辑，其余后续优化
+		if (FLOW_THEN.equals(flow.getFlowType())) {
+			if (!flow.addExecutable(executableList)) {
+				throw new UnInitializedFlowException("flow is not initialized");
+			}
+		} else {
+			return;
+		}
+	}
+
+	// XML解析Nodes方法
 	public static void parseNodes(List<Document> documents) {
 		XmlParserHelper.parseNodes(documents);
 	}
 
+	// XML解析Chains方法
 	public static void parseChains(List<Document> documents, Consumer<Element> chainParser) {
+		XmlParserHelper.parseChains(documents, chainParser);
 	}
 }

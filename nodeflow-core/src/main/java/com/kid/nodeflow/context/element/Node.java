@@ -8,7 +8,7 @@ import com.kid.nodeflow.enums.NodeType;
  * @author cwk
  * @version 1.0
  */
-public class Node implements Executable {
+public class Node implements Executable, Cloneable {
 
 	private String id;
 
@@ -59,5 +59,15 @@ public class Node implements Executable {
 	public Node setType(NodeType type) {
 		this.type = type;
 		return this;
+	}
+
+	@Override
+	public Node clone() {
+		try {
+			// 浅拷贝，对于引用类型属性，都不会额外拷贝一份
+			return (Node) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new AssertionError();
+		}
 	}
 }
