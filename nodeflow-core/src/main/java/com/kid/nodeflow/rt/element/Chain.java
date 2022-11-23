@@ -1,6 +1,8 @@
-package com.kid.nodeflow.context.element;
+package com.kid.nodeflow.rt.element;
 
-import com.kid.nodeflow.context.element.flow.Flow;
+import cn.hutool.core.collection.CollUtil;
+import com.kid.nodeflow.rt.DataBus;
+import com.kid.nodeflow.rt.element.flow.Flow;
 import java.util.List;
 
 /**
@@ -31,8 +33,15 @@ public class Chain implements Executable {
 	 * Chain的执行方法
 	 */
 	@Override
-	public void execute() {
-
+	public void execute(Integer slotIndex) {
+		try {
+			if (CollUtil.isEmpty(flowList)) {
+				return;
+			}
+			flowList.forEach(flow -> flow.execute(slotIndex));
+		} finally {
+			DataBus.freeSlot(slotIndex);
+		}
 	}
 
 	public String getId() {

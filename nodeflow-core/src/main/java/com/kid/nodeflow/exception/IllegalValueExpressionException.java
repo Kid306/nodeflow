@@ -1,4 +1,4 @@
-package com.kid.nodeflow.exception.rt;
+package com.kid.nodeflow.exception;
 
 public class IllegalValueExpressionException extends RuntimeException{
 	public IllegalValueExpressionException(String message) {

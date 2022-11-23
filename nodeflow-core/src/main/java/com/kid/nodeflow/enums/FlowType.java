@@ -1,8 +1,8 @@
 package com.kid.nodeflow.enums;
 
-import com.kid.nodeflow.context.element.flow.Flow;
-import com.kid.nodeflow.context.element.flow.ThenFlow;
-import com.kid.nodeflow.context.element.flow.WhenFlow;
+import com.kid.nodeflow.rt.element.flow.Flow;
+import com.kid.nodeflow.rt.element.flow.ThenFlow;
+import com.kid.nodeflow.rt.element.flow.WhenFlow;
 
 /**
  * 已定义的Flow类型枚举类

@@ -1,4 +1,4 @@
-package com.kid.nodeflow.context.element;
+package com.kid.nodeflow.rt.element;
 
 import com.kid.nodeflow.enums.NodeType;
 
@@ -20,7 +20,7 @@ public class Node implements Executable, Cloneable {
 	 * Node的执行方法，所有的Executable对象的执行操作都会到这个方法上来
 	 */
 	@Override
-	public void execute() {
+	public void execute(Integer slotIndex) {
 
 	}
 

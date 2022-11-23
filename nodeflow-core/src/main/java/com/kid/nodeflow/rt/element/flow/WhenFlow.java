@@ -1,4 +1,4 @@
-package com.kid.nodeflow.context.element.flow;
+package com.kid.nodeflow.rt.element.flow;
 
 import static com.kid.nodeflow.enums.FlowType.FLOW_WHEN;
 
@@ -11,7 +11,7 @@ public class WhenFlow extends Flow {
 	public WhenFlow() {}
 
 	@Override
-	public void execute() {
+	public void execute(Integer slotIndex) {
 		if (CollUtil.isEmpty(executableList)) {
 			return;
 		}

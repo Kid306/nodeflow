@@ -1,4 +1,4 @@
-package com.kid.nodeflow.exception.rt;
+package com.kid.nodeflow.exception;
 
 public class IllegalElementTypeException extends RuntimeException {
 	public IllegalElementTypeException(String message) {
