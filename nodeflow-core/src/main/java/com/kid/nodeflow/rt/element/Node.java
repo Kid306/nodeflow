@@ -1,6 +1,10 @@
 package com.kid.nodeflow.rt.element;
 
+import cn.hutool.core.util.StrUtil;
+import com.kid.nodeflow.core.component.NodeComponent;
 import com.kid.nodeflow.enums.NodeType;
+import com.kid.nodeflow.exception.ComponentInstantiationException;
+import com.kid.nodeflow.exception.NodeCanNotExecuteException;
 
 /**
  * 节点的可执行类
@@ -21,7 +25,17 @@ public class Node implements Executable, Cloneable {
 	 */
 	@Override
 	public void execute(Integer slotIndex) {
-
+		if (StrUtil.isEmpty(id) || clazz == null || type == null) {
+			throw new NodeCanNotExecuteException("Node's message is not complete, can not to execute");
+		}
+		// 这里需要保证所有的NodeComponent子类都有无参构造方法
+		NodeComponent nodeComp = null;
+		try {
+			nodeComp = (NodeComponent) clazz.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new ComponentInstantiationException("Class[%s] have no public|no arguments Constructor for instantiation", clazz);
+		}
+		nodeComp.process();
 	}
 
 	public Node() {

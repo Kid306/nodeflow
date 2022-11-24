@@ -15,25 +15,25 @@ public class FlowBuilder {
 	private Flow flow;
 
 	/**
-	 * 使用{@link FlowType#getFlowInstance()}获取相应Flow的实例对象，使用{@link Flow#init()}初始化executableList
+	 * 使用{@link FlowType#newFlowInstance()}获取相应Flow的实例对象，使用{@link Flow#init()}初始化executableList
 	 */
 	public static Flow buildFlow(FlowType flowType) {
 		if (flowType == null) {
 			return null;
 		}
-		Flow flow = flowType.getFlowInstance();
+		Flow flow = flowType.newFlowInstance();
 		flow.init();
 		return flow;
 	}
 
 	/**
-	 * 使用{@link FlowType#getFlowInstance()}获取相应Flow的实例对象，并且传入executableList
+	 * 使用{@link FlowType#newFlowInstance()}获取相应Flow的实例对象，并且传入executableList
 	 */
 	public static Flow buildFlow(FlowType flowType, List<Executable> executableList) {
 		if (flowType == null) {
 			return null;
 		}
-		Flow flow = flowType.getFlowInstance();
+		Flow flow = flowType.newFlowInstance();
 		flow.setExecutableList(executableList);
 		return flow;
 	}

@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class ExpressionParserHelper {
 
-	private static final Pattern pattern = Pattern.compile(",");
+	private static final Pattern pattern = Pattern.compile("[^,]");
 
 	/**
 	 *  解析节点标签中的value字段，匹配FlowBus中相应的Node

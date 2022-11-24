@@ -1,4 +1,4 @@
-package com.kid.nodeflow.paser.helper;
+package com.kid.nodeflow.parser.helper;
 
 import static com.kid.nodeflow.common.BaseConstant.CHAIN;
 import static com.kid.nodeflow.common.BaseConstant.CHAINS;
@@ -9,6 +9,7 @@ import static com.kid.nodeflow.common.BaseConstant.NODES;
 
 import cn.hutool.core.collection.CollUtil;
 import com.kid.nodeflow.builder.entity.NodeProp;
+import com.kid.nodeflow.exception.ChainsNotFoundException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -74,13 +75,17 @@ public class XmlParserHelper {
 		}
 		for (Document document : documents) {
 			Element root = document.getRootElement();
-			Iterator<Element> chainIter = root.element(CHAINS).elementIterator(CHAIN);
+			Element chains = root.element(CHAINS);
+			if (chains == null) {
+				throw new ChainsNotFoundException("Chains part is not found in Rule Source");
+			}
+			Iterator<Element> chainIter = chains.elementIterator(CHAIN);
 			while (chainIter.hasNext()) {
 				Element chain = chainIter.next();
-				String name = chain.attribute("name").getText();
+				String chainId = chain.attribute(ID).getText();
 				// 这里用作打印日志
-				if (nameSet.add(name)) {
-					System.err.printf("chain[%s] is duplicate\n", name);
+				if (!nameSet.add(chainId)) {
+					System.err.printf("chain[%s] is duplicate\n", chainId);
 				} else {
 					// 函数调用
 					chainParser.accept(chain);

@@ -29,15 +29,17 @@ public class ExpressionNode {
 	public static ExpressionNode resolve(String expression) {
 		expression = expression.trim();
 		if (StrUtil.isBlank(expression)) {
-			throw new IllegalValueExpressionException("Illegal value expression: {%s}; Pattern should be not blank", expression);
+			throw new IllegalValueExpressionException("Illegal value expression: %s; Pattern should be not blank", expression);
 		}
 		if (expression.indexOf(0) == '[' || expression.indexOf(0) == ']') {
-			throw new IllegalValueExpressionException("Illegal value expression: {%s}; id should be not be blank", expression);
+			throw new IllegalValueExpressionException("Illegal value expression: %s; id should be not be blank", expression);
 		}
 		int bucketStart = expression.indexOf('[');
 		int bucketEnd = expression.indexOf(']');
-		if (bucketStart < 0 || bucketEnd < 0 || bucketEnd <= bucketStart) {
-			throw new IllegalValueExpressionException("Illegal value expression: {%s}; Patterns should be followed id[tag]", expression);
+		if (bucketStart >= 0 || bucketEnd >= 0) {
+			if (bucketStart < 0 || bucketEnd < 0 || bucketEnd <= bucketStart) {
+				throw new IllegalValueExpressionException("Illegal value expression: %s; Patterns should be followed id[tag]", expression);
+			}
 		}
 		String id = null;
 		String tag = null;

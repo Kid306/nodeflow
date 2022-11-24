@@ -44,7 +44,11 @@ public class DataBus {
 			capacity();
 		}
 		// CAS保证线程安全
-		return FREE_INDEX.poll();
+		Integer index = FREE_INDEX.poll();
+		Slot slot = new Slot(index);
+		System.out.printf("Slot[%s] is assigning\n", index);
+		SLOTS.put(index, slot);
+		return index;
 	}
 
 	/**
@@ -53,6 +57,10 @@ public class DataBus {
 	public static void freeSlot(Integer index) {
 		if (SLOTS.containsKey(index)) {
 			FREE_INDEX.offer(index);
+			// no need to remove SLOTS[index]
+			System.out.printf("Slot[%s] is set free\n", index);
+		} else {
+			System.out.printf("Slot[%s] is not exist\n", index);
 		}
 	}
 

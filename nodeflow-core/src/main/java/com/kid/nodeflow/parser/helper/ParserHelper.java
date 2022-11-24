@@ -1,4 +1,4 @@
-package com.kid.nodeflow.paser.helper;
+package com.kid.nodeflow.parser.helper;
 
 import static com.kid.nodeflow.common.BaseConstant.COMP_PACKAGE;
 import static com.kid.nodeflow.enums.FlowType.FLOW_THEN;

@@ -23,18 +23,19 @@ public enum FlowType {
 		this.clazz = clazz;
 	}
 
-	public Class<? extends Flow> getClazz() {
-		return clazz;
-	}
-
-	public String getType() {
-		return this.type;
+	public static FlowType getFlowType(String name) {
+		for (FlowType flowType : FlowType.values()) {
+			if (flowType.type.equals(name)) {
+				return flowType;
+			}
+		}
+		return null;
 	}
 
 	/**
 	 * 通过反射获取Flow对象
 	 */
-	public Flow getFlowInstance() {
+	public Flow newFlowInstance() {
 		Flow flow = null;
 		try {
 			flow = clazz.newInstance();
@@ -42,5 +43,13 @@ public enum FlowType {
 			// never occur
 		}
 		return flow;
+	}
+
+	public Class<? extends Flow> getClazz() {
+		return clazz;
+	}
+
+	public String getType() {
+		return this.type;
 	}
 }

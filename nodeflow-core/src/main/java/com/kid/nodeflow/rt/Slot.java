@@ -15,6 +15,10 @@ public class Slot {
 
 	private final Map<String, Object> data = new ConcurrentHashMap<>();
 
+	public Slot(Integer index) {
+		this.index = index;
+	}
+
 	public void setData(String key, Object value) {
 		data.put(key, value);
 	}

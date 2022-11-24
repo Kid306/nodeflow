@@ -11,6 +11,16 @@ import com.kid.nodeflow.common.ResponseCode;
 public class NodeFlowResponse {
 	private boolean success;
 
+	@Override
+	public String toString() {
+		return "NodeFlowResponse{" +
+				"success=" + success +
+				", message='" + message + '\'' +
+				", code=" + code +
+				", cause=" + cause +
+				'}';
+	}
+
 	private String message;
 
 	private int code;

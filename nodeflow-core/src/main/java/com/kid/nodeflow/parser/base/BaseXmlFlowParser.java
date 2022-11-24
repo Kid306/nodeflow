@@ -1,4 +1,4 @@
-package com.kid.nodeflow.paser.base;
+package com.kid.nodeflow.parser.base;
 
 import static com.kid.nodeflow.common.BaseConstant.CHAIN;
 import static com.kid.nodeflow.common.BaseConstant.ID;
@@ -13,7 +13,7 @@ import com.kid.nodeflow.enums.FlowType;
 import com.kid.nodeflow.exception.IllegalElementTypeException;
 import com.kid.nodeflow.exception.IllegalFlowTypeException;
 import com.kid.nodeflow.expression.ExpressionParserHelper;
-import com.kid.nodeflow.paser.helper.ParserHelper;
+import com.kid.nodeflow.parser.helper.ParserHelper;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -52,16 +52,16 @@ public class BaseXmlFlowParser extends XmlFlowParser {
 			String flowValue = element.attribute(VALUE).getText();
 			FlowType flowType;
 			try {
-				flowType = FlowType.valueOf(flowName);
+				flowType = FlowType.getFlowType(flowName);
 			} catch (IllegalArgumentException e) {
 				// 出现错误的flow的chain将不再解析，在解析阶段直接报错
 				log.error("Undefined flow type: {}", flowName);
 				throw new IllegalFlowTypeException("Undefined flow type: [%s]", flowName);
 			}
-			// TODO 解析Value
 			List<Executable> executableList = ExpressionParserHelper.resolveValue(flowValue);
 			// 考虑相邻Flow的逻辑合并
-			if (CollUtil.getLast(chain.getFlowList()).getFlowType().equals(flowType)) {
+			if (CollUtil.isNotEmpty(chain.getFlowList()) && CollUtil.getLast(chain.getFlowList()).getFlowType().equals(flowType)) {
+				// TODO 测试到这里有报错
 				ParserHelper.mergeFlow(CollUtil.getLast(chain.getFlowList()), executableList);
 			} else {
 				// 否则添加Flow

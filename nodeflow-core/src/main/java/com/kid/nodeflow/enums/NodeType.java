@@ -34,6 +34,18 @@ public enum NodeType {
 		return null;
 	}
 
+	/**
+	 * 通过反射获取NodeComponent对象
+	 */
+	public NodeComponent newNodeCompInstance() {
+		NodeComponent nodeComp = null;
+		try {
+			nodeComp = clazz.newInstance();
+		} catch (InstantiationException | IllegalAccessException ignore) {
+			// never occur
+		}
+		return nodeComp;
+	}
 
 	public String getName() {
 		return name;

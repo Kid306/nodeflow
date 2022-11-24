@@ -1,4 +1,4 @@
-package com.kid.nodeflow.paser.base;
+package com.kid.nodeflow.parser.base;
 
 import java.util.List;
 
@@ -13,6 +13,6 @@ public interface FlowParser {
 	/**
 	 * 解析文本文件
 	 */
-	public void parse(List<String> contents) throws Exception;
+	public void parse(List<String> contents);
 
 }
