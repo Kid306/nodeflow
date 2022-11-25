@@ -18,6 +18,13 @@ import org.dom4j.Element;
  */
 public abstract class XmlFlowParser implements FlowParser {
 
+	/**
+	 * 解析文本文件
+	 */
+	@Override
+	public void parse(String content) {
+		this.parse(CollUtil.newArrayList(content));
+	}
 
 	/**
 	 * 解析Xml文本文件

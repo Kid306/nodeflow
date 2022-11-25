@@ -1,5 +1,7 @@
 package com.kid.nodeflow.config;
 
+import static com.kid.nodeflow.common.BaseConstant.DEFAULT_SLOTS_SIZE;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -21,6 +23,11 @@ public class NodeFlowConfig {
 	 */
 	private List<String> ruleSourcePath = Collections.singletonList("classpath:flow/test.xml");
 
+	/**
+	 * 初始SLOTS槽大小
+	 */
+	private Integer initialSlotsSize = DEFAULT_SLOTS_SIZE;
+
 	public Boolean getParseOnStart() {
 		return parseOnStart;
 	}
@@ -35,5 +42,13 @@ public class NodeFlowConfig {
 
 	public void setRuleSourcePath(List<String> ruleSourcePath) {
 		this.ruleSourcePath = ruleSourcePath;
+	}
+
+	public Integer getInitialSlotsSize() {
+		return initialSlotsSize;
+	}
+
+	public void setInitialSlotsSize(Integer initialSlotsSize) {
+		this.initialSlotsSize = initialSlotsSize;
 	}
 }

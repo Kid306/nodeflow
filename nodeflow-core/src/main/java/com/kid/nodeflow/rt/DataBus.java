@@ -2,10 +2,12 @@ package com.kid.nodeflow.rt;
 
 import static com.kid.nodeflow.common.BaseConstant.DEFAULT_SLOTS_SIZE;
 
+import com.kid.nodeflow.exception.SystemInitializeException;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -16,21 +18,22 @@ import java.util.stream.IntStream;
  * @version 1.0
  */
 public class DataBus {
+
+	private static final AtomicBoolean IS_INIT = new AtomicBoolean(false);
 	// 槽位当前容量
 	private static Integer SLOT_CAPACITY = DEFAULT_SLOTS_SIZE;
-
 	// 总槽位。ConcurrentHashMap会解决线程问题和扩容问题
-	private static Map<Integer, Slot> SLOTS = new ConcurrentHashMap<>(DEFAULT_SLOTS_SIZE, 0.75f);
-
+	private static final Map<Integer, Slot> SLOTS = new ConcurrentHashMap<>(DEFAULT_SLOTS_SIZE, 0.75f);
 	// 保存空闲的槽的index
 	private static final Queue<Integer> FREE_INDEX = new ConcurrentLinkedQueue<>();
 
-	static {
-		init();
-	}
-
-	private static void init() {
-		FREE_INDEX.addAll(IntStream.range(0, DEFAULT_SLOTS_SIZE).boxed().collect(Collectors.toList()));
+	static void init() {
+		if (!NodeFlowRuntime.isStart()) {
+			SLOT_CAPACITY = NodeFlowRuntime.getConfig().getInitialSlotsSize();
+			FREE_INDEX.addAll(IntStream.range(0, DEFAULT_SLOTS_SIZE)
+					.boxed().collect(Collectors.toList()));
+			IS_INIT.set(true);
+		}
 	}
 
 	private DataBus() {}
@@ -72,9 +75,26 @@ public class DataBus {
 	}
 
 	/**
+	 * <p>DataBus的清理工作，执行完成之后的状态与执行init方法之前相同</p>
+	 * <p>该方法是一个非阻塞方法，该方法执行之前必须保证NodeFlow没有启动</p>
+	 */
+	public static void clear() {
+		// 这里要保证系统没有运行时才可以进行清理工作
+		// 注意：系统的停止运行不是不应该在这里完成，或者说该方法不应该阻塞等待系统停止
+		if (!NodeFlowRuntime.isStart()) {
+			SLOT_CAPACITY = DEFAULT_SLOTS_SIZE;
+			SLOTS.clear();
+			FREE_INDEX.clear();
+		}
+	}
+
+	/**
 	 * 扩容操作
 	 */
 	private synchronized static void capacity() {
+		if (!IS_INIT.get()) {
+			throw new SystemInitializeException("Data Bus is not init");
+		}
 		if (FREE_INDEX.isEmpty()) {
 			int oldCapacity = SLOT_CAPACITY;
 			SLOT_CAPACITY += (SLOT_CAPACITY >> 2) + (SLOT_CAPACITY >> 1);

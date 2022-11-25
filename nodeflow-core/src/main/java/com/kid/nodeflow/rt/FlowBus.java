@@ -22,6 +22,21 @@ public class FlowBus {
 	// 装载了所有已定义的Chain
 	private static final Map<String, Chain> chainMap = new HashMap<>();
 
+	static void init() {
+		// do nothing
+	}
+
+	/**
+	 * <p>FlowBus的清理工作</p>
+	 * <p>该方法是一个非阻塞方法，该方法执行之前必须保证NodeFlow没有启动</p>
+	 */
+	public static void clear() {
+		if (!NodeFlowRuntime.isStart()) {
+			nodeMap.clear();
+			chainMap.clear();
+		}
+	}
+
 	public static void addNode(Node node) {
 		if (node != null) {
 			nodeMap.put(node.getId(), node);

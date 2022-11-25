@@ -24,32 +24,28 @@ public class FlowParserProvider {
 	private static final ParserFactory BASE_PARSER_FACTORY = new BaseParserFactory();
 
 	private static final Map<Predicate<String>, Supplier<FlowParser>> PARSER_CREATOR = new HashMap<Predicate<String>, Supplier<FlowParser>>() {
-		{
-			put(path -> path.matches(BASE_XML_REGEX), BASE_PARSER_FACTORY::newXmlFlowParser);
-		}
+		{ put(path -> path.matches(BASE_XML_REGEX), BASE_PARSER_FACTORY::getXmlFlowParser);}
 	};
 
 	// 该类是用于复用FlowParser的工具类集合，不保证线程安全
 	private static final Set<FlowParser> PARSER_SET = new HashSet<>();
 
 	static class RuleSourceConstant {
-
 		public static final String BASE_XML_REGEX = "^[a-zA-Z0-9:_\\\\]+\\.xml$";
 		public static final String EL_XML_REGEX = "^[a-zA-Z0-9:_\\\\]+\\.el\\.xml$";
 	}
 
 	/**
-	 * 根据RuleSource的路径获取FlowParser。该方法每次调用都会创建一个新的FlowParser，效率较低，不建议在循环中使用！
-	 * TODO 测试环境下仍然使用这个方法，后续保存已经创建好的Parser，实现重用
+	 * 根据RuleSource的文件名获取FlowParser
 	 */
-	public FlowParser findParser(String sourcePath) {
-		if (StrUtil.isEmpty(sourcePath)) {
-			throw new ParserNotFoundException("No matching parser for file: %s", sourcePath);
+	public static FlowParser findParser(String fileName) {
+		if (StrUtil.isEmpty(fileName)) {
+			throw new ParserNotFoundException("No matching parser for file: %s", fileName);
 		}
 		return PARSER_CREATOR.get(
-				PARSER_CREATOR.keySet().stream().filter(pathPredicate -> pathPredicate.test(sourcePath))
+				PARSER_CREATOR.keySet().stream().filter(pathPredicate -> pathPredicate.test(fileName))
 						.findFirst().orElseThrow(
-								() -> new ParserNotFoundException("No matching parser for file: %s", sourcePath))
+								() -> new ParserNotFoundException("No matching parser for file: %s", fileName))
 		).get();
 	}
 }

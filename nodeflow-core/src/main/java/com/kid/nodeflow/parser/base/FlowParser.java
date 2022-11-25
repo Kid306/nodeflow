@@ -9,10 +9,11 @@ import java.util.List;
  * @version 1.0
  */
 public interface FlowParser {
-
 	/**
 	 * 解析文本文件
 	 */
+	public void parse(String content);
+
 	public void parse(List<String> contents);
 
 }
