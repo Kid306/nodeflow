@@ -2,7 +2,7 @@ package com.kid.nodeflow.config;
 
 import static com.kid.nodeflow.common.BaseConstant.DEFAULT_SLOTS_SIZE;
 
-import java.util.Collections;
+import cn.hutool.core.collection.CollUtil;
 import java.util.List;
 
 /**
@@ -21,7 +21,7 @@ public class NodeFlowConfig {
 	/**
 	 * 规则文件的配置路径
 	 */
-	private List<String> ruleSourcePath = Collections.singletonList("classpath:flow/test.xml");
+	private List<String> ruleSourcePath = CollUtil.list(false, "classpath:flow/test.xml");
 
 	/**
 	 * 初始SLOTS槽大小
@@ -42,6 +42,10 @@ public class NodeFlowConfig {
 
 	public void setRuleSourcePath(List<String> ruleSourcePath) {
 		this.ruleSourcePath = ruleSourcePath;
+	}
+
+	public void addRuleSourcePath(String path) {
+		ruleSourcePath.add(path);
 	}
 
 	public Integer getInitialSlotsSize() {

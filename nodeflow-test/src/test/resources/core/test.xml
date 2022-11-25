@@ -13,7 +13,8 @@
 		</chain>
 
 		<chain id="chain2">
-			<then value="c,d"/>
+			<then value="  a, b   "/>
+			<then value="  c,  d  "/>
 		</chain>
 	</chains>
 </flow>

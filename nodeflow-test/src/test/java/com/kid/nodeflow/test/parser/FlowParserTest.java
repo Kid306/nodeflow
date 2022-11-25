@@ -1,22 +1,28 @@
 package com.kid.nodeflow.test.parser;
 
-import cn.hutool.core.io.IoUtil;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.kid.nodeflow.config.NodeFlowConfig;
+import com.kid.nodeflow.rt.ChainExecutor;
+import com.kid.nodeflow.rt.NodeFlowRuntime;
+import org.junit.Before;
 import org.junit.Test;
 
 public class FlowParserTest {
+	ChainExecutor executor;
+
+	@Before
+	public void init() {
+		NodeFlowConfig config = new NodeFlowConfig();
+		config.addRuleSourcePath("/core/test.xml");
+		System.out.println(config.getRuleSourcePath());
+		NodeFlowRuntime.loadConfig(config);
+		executor = new ChainExecutor();
+	}
+
+	/**
+	 * 针对Flow的合并测试
+	 */
 	@Test
 	public void test01() {
-		InputStream is = getClass().getResourceAsStream("/core/test.xml");
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		IoUtil.copy(is, os);
-		// System.out.println(os.toString().replaceAll(">\\s*?<", "><"));
-		Pattern pattern = Pattern.compile("(?<=>)\\s+(?=<)");
-		Matcher matcher = pattern.matcher(os.toString());
-		System.out.println(matcher.replaceAll(""));
-		// System.out.println(os.toString().replaceAll("\\s*(?=<)", ""));
+		System.out.println(executor.exec("chain2"));
 	}
 }

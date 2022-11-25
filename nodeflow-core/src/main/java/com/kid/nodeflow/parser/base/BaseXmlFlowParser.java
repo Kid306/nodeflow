@@ -44,10 +44,10 @@ public class BaseXmlFlowParser extends XmlFlowParser {
 		// 使用中间对象而不是创建一个Chain，防止解析中出现异常而导致需要从FlowBus中将Chain移除
 		ChainProp chain = new ChainProp(chainId, new ArrayList<>());
 		// 1. 解析<chain/>
-		Iterator<Element> iter = chainElement.elementIterator();
-		while (iter.hasNext()) {
+		Iterator<Element> flowIter = chainElement.elementIterator();
+		while (flowIter.hasNext()) {
 			// 每一个子标签都对应一个Flow
-			Element element = iter.next();
+			Element element = flowIter.next();
 			String flowName = element.getName();
 			String flowValue = element.attribute(VALUE).getText();
 			FlowType flowType;
@@ -61,7 +61,6 @@ public class BaseXmlFlowParser extends XmlFlowParser {
 			List<Executable> executableList = ExpressionParserHelper.resolveValue(flowValue);
 			// 考虑相邻Flow的逻辑合并
 			if (CollUtil.isNotEmpty(chain.getFlowList()) && CollUtil.getLast(chain.getFlowList()).getFlowType().equals(flowType)) {
-				// TODO 测试到这里有报错
 				ParserHelper.mergeFlow(CollUtil.getLast(chain.getFlowList()), executableList);
 			} else {
 				// 否则添加Flow

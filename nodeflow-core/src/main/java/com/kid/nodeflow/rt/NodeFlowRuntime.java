@@ -115,6 +115,10 @@ public class NodeFlowRuntime {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			for (String path : ruleSourcePath) {
 				InputStream is = NodeFlowRuntime.class.getResourceAsStream(path);
+				// 继续遍历其他配置文件
+				if (is == null) {
+					continue;
+				}
 				String fileName = FileUtil.getName(path);
 				IoUtil.copy(is, os);
 				// 根据文件名来判断选择哪种解析器
@@ -129,6 +133,7 @@ public class NodeFlowRuntime {
 			DataBus.clear();
 			FlowBus.clear();
 			NodeFlowRuntime.setUnInit();
+			e.printStackTrace();
 			throw new SystemInitializeException(e.getMessage());
 		}
 	}
