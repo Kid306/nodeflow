@@ -134,10 +134,12 @@ public class NodeFlowRuntime {
 			// 2. 读取和解析RuleSource
 			List<String> ruleSourcePath = config.getRuleSourcePath();
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			int count = 0;
 			for (String path : ruleSourcePath) {
 				InputStream is = NodeFlowRuntime.class.getResourceAsStream(path);
 				// 继续遍历其他配置文件
 				if (is == null) {
+					log.error("rule source not found: {}", path);
 					continue;
 				}
 				String fileName = FileUtil.getName(path);
@@ -145,7 +147,12 @@ public class NodeFlowRuntime {
 				// 根据文件名来判断选择哪种解析器
 				FlowParser parser = FlowParserProvider.findParser(fileName);
 				// 开始解析
+				log.info("parse rule source: {}", path);
 				parser.parse(os.toString());
+				count ++;
+			}
+			if (count == 0) {
+				throw new SystemInitializeException("no rule source find");
 			}
 			// 3. 设置标志位
 			NodeFlowRuntime.setInit();

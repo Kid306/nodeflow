@@ -1,6 +1,6 @@
-package com.kid.nodeflow.exception.rt;
+package com.kid.nodeflow.exception;
 
-public class RuleSourceParseException extends RuntimeException {
+public class RuleSourceParseException extends Exception {
 	public RuleSourceParseException(String message) {
 		super(message);
 	}

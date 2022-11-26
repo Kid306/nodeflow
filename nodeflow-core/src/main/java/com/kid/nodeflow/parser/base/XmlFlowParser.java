@@ -1,7 +1,9 @@
 package com.kid.nodeflow.parser.base;
 
 import cn.hutool.core.collection.CollUtil;
-import com.kid.nodeflow.exception.rt.RuleSourceParseException;
+import com.kid.nodeflow.exception.NodeClassNotFoundException;
+import com.kid.nodeflow.exception.RuleSourceParseException;
+import com.kid.nodeflow.exception.ChainsLabelNotFoundException;
 import com.kid.nodeflow.parser.helper.ParserHelper;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public abstract class XmlFlowParser implements FlowParser {
 	 * 解析文本文件
 	 */
 	@Override
-	public void parse(String content) {
+	public void parse(String content) throws RuleSourceParseException {
 		this.parse(CollUtil.newArrayList(content));
 	}
 
@@ -30,20 +32,20 @@ public abstract class XmlFlowParser implements FlowParser {
 	 * 解析Xml文本文件
 	 */
 	@Override
-	public void parse(List<String> contents) {
+	public void parse(List<String> contents) throws RuleSourceParseException {
 		if (CollUtil.isEmpty(contents)) {
 			return;
 		}
 		List<Document> documents = new ArrayList<>(contents.size());
-		for (String content : contents) {
-			try {
+		try {
+			for (String content : contents) {
 				documents.add(DocumentHelper.parseText(content));
-			} catch (DocumentException e) {
-				throw new RuleSourceParseException("Rule Source File of Xml parse error");
 			}
+			ParserHelper.parseNodes(documents);
+			ParserHelper.parseChains(documents, this::parseChain);
+		} catch (DocumentException | ChainsLabelNotFoundException | NodeClassNotFoundException e) {
+			throw new RuleSourceParseException("Rule Source File of Xml parse error: %s", e.getMessage());
 		}
-		ParserHelper.parseNodes(documents);
-		ParserHelper.parseChains(documents, this::parseChain);
 	}
 
 	/**

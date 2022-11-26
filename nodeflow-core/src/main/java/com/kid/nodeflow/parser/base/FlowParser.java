@@ -1,5 +1,6 @@
 package com.kid.nodeflow.parser.base;
 
+import com.kid.nodeflow.exception.RuleSourceParseException;
 import java.util.List;
 
 /**
@@ -12,8 +13,8 @@ public interface FlowParser {
 	/**
 	 * 解析文本文件
 	 */
-	public void parse(String content);
+	public void parse(String content) throws RuleSourceParseException;
 
-	public void parse(List<String> contents);
+	public void parse(List<String> contents) throws RuleSourceParseException;
 
 }

@@ -41,14 +41,6 @@ public class ExpressionParserHelper {
 		// 按照','进行分割，会自动去除空白
 		// 这里的trim()是必须的，因为如果value的开头有空白，expressions中就会产生一个空白
 		String[] expressions = value.trim().split("\\s*,\\s*");
-		// // 首先先判断一遍，避免中途发现有不合法的表达式但是已经调用resolve方法带来不必要的性能消耗
-		// for (String expression : expressions) {
-		// 	// 判断其是否是一个正确的Node表达式
-		// 	if (isNodeExpression(expression, NodeType.NODE_COMMON)) {
-		// 		throw new IllegalNodeExpressionException("Illegal node expression as %s: \"%s\"",
-		// 				NodeType.NODE_COMMON.name(), expression);
-		// 	}
-		// }
 		List<Executable> executableList = new ArrayList<>();
 		for (String expression : expressions) {
 			// 解析出Node or Flow or Chain

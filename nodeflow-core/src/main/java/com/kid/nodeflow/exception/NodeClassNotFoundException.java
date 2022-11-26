@@ -1,6 +1,6 @@
-package com.kid.nodeflow.exception.rt;
+package com.kid.nodeflow.exception;
 
-public class NodeClassNotFoundException extends RuntimeException {
+public class NodeClassNotFoundException extends Exception {
 
 	public NodeClassNotFoundException(String message) {
 		super(message);

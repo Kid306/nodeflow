@@ -2,12 +2,14 @@ package com.kid.nodeflow.builder;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.kid.nodeflow.exception.rt.NodeBuildException;
 import com.kid.nodeflow.rt.FlowBus;
 import com.kid.nodeflow.rt.element.Chain;
 import com.kid.nodeflow.rt.element.flow.Flow;
-import com.kid.nodeflow.exception.rt.NodeBuildException;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Chain的构建器
@@ -16,6 +18,7 @@ import java.util.List;
  * @version 1.0
  */
 public class ChainBuilder {
+	private static final Logger log = LoggerFactory.getLogger(ChainBuilder.class);
 
 	private final Chain chain;
 
@@ -28,6 +31,7 @@ public class ChainBuilder {
 		checkBuild();
 		// 向FlowBus中添加Chain
 		FlowBus.addChain(chain);
+		log.info("chain({}) is added to FlowBus", chain.getId());
 	}
 
 	/**

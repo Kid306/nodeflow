@@ -3,18 +3,20 @@ package com.kid.nodeflow.parser.helper;
 import static com.kid.nodeflow.common.BaseConstant.COMP_PACKAGE;
 import static com.kid.nodeflow.enums.FlowType.FLOW_THEN;
 
-import cn.hutool.core.util.StrUtil;
 import com.kid.nodeflow.builder.NodeBuilder;
 import com.kid.nodeflow.builder.entity.NodeProp;
+import com.kid.nodeflow.enums.NodeType;
+import com.kid.nodeflow.exception.NodeClassNotFoundException;
+import com.kid.nodeflow.exception.ChainsLabelNotFoundException;
+import com.kid.nodeflow.exception.rt.UnInitializedFlowException;
 import com.kid.nodeflow.rt.element.Executable;
 import com.kid.nodeflow.rt.element.flow.Flow;
-import com.kid.nodeflow.enums.NodeType;
-import com.kid.nodeflow.exception.rt.UnInitializedFlowException;
-import com.kid.nodeflow.exception.rt.NodeClassNotFoundException;
 import java.util.List;
 import java.util.function.Consumer;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 聚合XML、JSON、YML文件的解析器工具类
@@ -23,6 +25,8 @@ import org.dom4j.Element;
  * @version 1.0
  */
 public class ParserHelper {
+	private static final Logger log = LoggerFactory.getLogger(ParserHelper.class);
+
 	private ParserHelper() {}
 
 	/**
@@ -48,16 +52,12 @@ public class ParserHelper {
 	/**
 	 * 根据NodeProp来创建Node对象，并且加载到FlowBus中
 	 */
-	public static void buildNode(NodeProp nodeProp) {
+	public static void buildNode(NodeProp nodeProp) throws NodeClassNotFoundException {
 		if (nodeProp == null) {
 			return;
 		}
 		String nodeId = nodeProp.getId();
 		String className = nodeProp.getClassName();
-		// 推测Node的类型
-		if (StrUtil.isBlank(className)) {
-			throw new NodeClassNotFoundException("node class not found:[{%s}]", className);
-		}
 		try {
 			Class<?> clazz = Class.forName(className);
 			NodeType nodeType = guessType(clazz);
@@ -68,7 +68,8 @@ public class ParserHelper {
 					.type(nodeType)
 					.build();
 		} catch (ClassNotFoundException e) {
-			throw new NodeClassNotFoundException("node class not found:[{%s}]", className);
+			log.error("node class not found: \"{}\"", className);
+			throw new NodeClassNotFoundException("node class not found: \"%s\"", className);
 		}
 	}
 
@@ -87,12 +88,13 @@ public class ParserHelper {
 	}
 
 	// XML解析Nodes方法
-	public static void parseNodes(List<Document> documents) {
+	public static void parseNodes(List<Document> documents) throws NodeClassNotFoundException {
 		XmlParserHelper.parseNodes(documents);
 	}
 
 	// XML解析Chains方法
-	public static void parseChains(List<Document> documents, Consumer<Element> chainParser) {
+	public static void parseChains(List<Document> documents, Consumer<Element> chainParser)
+			throws ChainsLabelNotFoundException {
 		XmlParserHelper.parseChains(documents, chainParser);
 	}
 }
