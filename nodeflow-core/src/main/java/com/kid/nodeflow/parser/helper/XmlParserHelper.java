@@ -9,7 +9,9 @@ import static com.kid.nodeflow.common.BaseConstant.NODES;
 
 import cn.hutool.core.collection.CollUtil;
 import com.kid.nodeflow.builder.entity.NodeProp;
-import com.kid.nodeflow.exception.ChainsNotFoundException;
+import com.kid.nodeflow.exception.rt.ChainsNotFoundException;
+import com.kid.nodeflow.rt.FlowBus;
+import com.kid.nodeflow.rt.element.Chain;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 解析基础XML的解析器工具类
@@ -25,11 +29,10 @@ import org.dom4j.Element;
  * @version 1.0
  */
 public class XmlParserHelper {
-	private static final Set<String> XML_SET;
+	private static final Logger log = LoggerFactory.getLogger(XmlParserHelper.class);
 
-	static {
-		XML_SET = new HashSet<>();
-	}
+	private static final Set<String> XML_SET = new HashSet<>();
+
 
 	private XmlParserHelper() {}
 
@@ -73,19 +76,25 @@ public class XmlParserHelper {
 		if (CollUtil.isEmpty(documents)) {
 			return;
 		}
-		for (Document document : documents) {
-			Element root = document.getRootElement();
-			Element chains = root.element(CHAINS);
+		// 首先先获取所有chainId，预处理一遍，防止循环依赖问题
+		documents.forEach(document -> {
+			Element chains = document.getRootElement().element(CHAINS);
 			if (chains == null) {
 				throw new ChainsNotFoundException("Chains part is not found in Rule Source");
 			}
+			// 向FlowBus中放入占位Chain
+			chains.elements(CHAIN).forEach(chain -> FlowBus.addChain(Chain.emptyChain(chain.attribute(ID).getText())));
+		});
+		for (Document document : documents) {
+			Element root = document.getRootElement();
+			Element chains = root.element(CHAINS);
 			Iterator<Element> chainIter = chains.elementIterator(CHAIN);
 			while (chainIter.hasNext()) {
 				Element chain = chainIter.next();
 				String chainId = chain.attribute(ID).getText();
 				// 这里用作打印日志
 				if (!nameSet.add(chainId)) {
-					System.err.printf("chain[%s] is duplicate\n", chainId);
+					log.error("chain[{}] is duplicate", chainId);
 				} else {
 					// 函数调用
 					chainParser.accept(chain);

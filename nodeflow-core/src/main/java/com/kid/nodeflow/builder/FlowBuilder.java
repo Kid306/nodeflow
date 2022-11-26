@@ -12,6 +12,7 @@ import java.util.List;
  * @version 1.0
  */
 public class FlowBuilder {
+
 	private Flow flow;
 
 	/**
@@ -21,20 +22,19 @@ public class FlowBuilder {
 		if (flowType == null) {
 			return null;
 		}
-		Flow flow = flowType.newFlowInstance();
-		flow.init();
-		return flow;
+		return flowType.newFlowInstance();
 	}
 
 	/**
 	 * 使用{@link FlowType#newFlowInstance()}获取相应Flow的实例对象，并且传入executableList
 	 */
-	public static Flow buildFlow(FlowType flowType, List<Executable> executableList) {
+	public static <T extends Flow> T buildFlow(FlowType flowType, List<Executable> executableList) {
 		if (flowType == null) {
 			return null;
 		}
 		Flow flow = flowType.newFlowInstance();
 		flow.setExecutableList(executableList);
-		return flow;
+		// no check
+		return (T) flow;
 	}
 }

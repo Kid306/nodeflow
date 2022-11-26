@@ -22,8 +22,8 @@ public class BaseConstant {
 
 	public static final String VALUE = "value";
 
-
 	public static final String COMP_PACKAGE = "com.kid.nodeflow.core.component";
 
 	public static final Integer DEFAULT_SLOTS_SIZE = 1024;
+
 }

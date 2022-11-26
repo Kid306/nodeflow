@@ -1,7 +1,7 @@
 package com.kid.nodeflow.parser.base;
 
 import cn.hutool.core.collection.CollUtil;
-import com.kid.nodeflow.exception.RuleSourceParseException;
+import com.kid.nodeflow.exception.rt.RuleSourceParseException;
 import com.kid.nodeflow.parser.helper.ParserHelper;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public abstract class XmlFlowParser implements FlowParser {
 			try {
 				documents.add(DocumentHelper.parseText(content));
 			} catch (DocumentException e) {
-				throw new RuleSourceParseException("Rule Source File of Xml is parsed error");
+				throw new RuleSourceParseException("Rule Source File of Xml parse error");
 			}
 		}
 		ParserHelper.parseNodes(documents);

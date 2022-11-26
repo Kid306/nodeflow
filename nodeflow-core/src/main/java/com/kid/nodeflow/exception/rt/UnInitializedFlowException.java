@@ -1,4 +1,4 @@
-package com.kid.nodeflow.exception;
+package com.kid.nodeflow.exception.rt;
 
 public class UnInitializedFlowException extends RuntimeException {
 	public UnInitializedFlowException(String message) {

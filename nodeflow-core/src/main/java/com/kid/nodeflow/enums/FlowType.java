@@ -1,6 +1,7 @@
 package com.kid.nodeflow.enums;
 
 import com.kid.nodeflow.rt.element.flow.Flow;
+import com.kid.nodeflow.rt.element.flow.IfFlow;
 import com.kid.nodeflow.rt.element.flow.ThenFlow;
 import com.kid.nodeflow.rt.element.flow.WhenFlow;
 
@@ -12,7 +13,8 @@ import com.kid.nodeflow.rt.element.flow.WhenFlow;
  */
 public enum FlowType {
 	FLOW_THEN("then", ThenFlow.class),
-	FLOW_WHEN("when", WhenFlow.class);
+	FLOW_WHEN("when", WhenFlow.class),
+	FLOW_IF("if", IfFlow.class);
 
 	private final String type;
 

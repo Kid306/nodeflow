@@ -5,8 +5,10 @@ import static com.kid.nodeflow.common.ResponseCode.SUCCESS;
 import static com.kid.nodeflow.common.ResponseCode.SYSTEM_NOT_INIT;
 
 import com.kid.nodeflow.core.NodeFlowResponse;
-import com.kid.nodeflow.exception.ChainNotFoundException;
+import com.kid.nodeflow.exception.rt.ChainNotFoundException;
 import com.kid.nodeflow.rt.element.Chain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Chain流程的执行器
@@ -15,6 +17,7 @@ import com.kid.nodeflow.rt.element.Chain;
  * @version 1.0
  */
 public class ChainExecutor {
+	private static final Logger log = LoggerFactory.getLogger(ChainExecutor.class);
 
 	public ChainExecutor() {
 		if (needInit()) {
@@ -36,8 +39,10 @@ public class ChainExecutor {
 					.success(false)
 					.status(SYSTEM_NOT_INIT);
 		}
+		NodeFlowRuntime.registerExecutor(this);
+		Integer slotIndex = DataBus.nextSlot();
+		log.info("Chain[{}] is assigned executing in Slot[{}]", chainId, slotIndex);
 		try {
-			Integer slotIndex = DataBus.nextSlot();
 			return this.exec(chainId, slotIndex);
 		} catch (Exception cause) {
 			cause.printStackTrace();
@@ -45,6 +50,11 @@ public class ChainExecutor {
 					.success(false)
 					.message(cause.getMessage())
 					.cause(cause);
+		} finally {
+			DataBus.freeSlot(slotIndex);
+			log.info("Slot[{}] is set free", slotIndex);
+			NodeFlowRuntime.setInit();
+			NodeFlowRuntime.removeExecutor(this);
 		}
 	}
 
@@ -52,12 +62,6 @@ public class ChainExecutor {
 	 * 执行指定id的chain流程，使用slotIndex处的Slot，见{@link com.kid.nodeflow.rt.Slot}
 	 */
 	private NodeFlowResponse exec(String chainId, Integer slotIndex) {
-		if (needInit()) {
-			return NodeFlowResponse.getInstance()
-					.success(false)
-					.status(SYSTEM_NOT_INIT);
-		}
-		System.out.printf("Chain[%s] is assigned executing in Slot[%s]\n", chainId, slotIndex);
 		// 解析
 		Chain chain = FlowBus.getChain(chainId);
 		if (chain == null) {

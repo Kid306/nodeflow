@@ -3,8 +3,8 @@ package com.kid.nodeflow.rt.element;
 import cn.hutool.core.util.StrUtil;
 import com.kid.nodeflow.core.component.NodeComponent;
 import com.kid.nodeflow.enums.NodeType;
-import com.kid.nodeflow.exception.ComponentInstantiationException;
-import com.kid.nodeflow.exception.NodeCanNotExecuteException;
+import com.kid.nodeflow.exception.rt.ComponentInstantiationException;
+import com.kid.nodeflow.exception.rt.NodeCanNotExecuteException;
 
 /**
  * 节点的可执行类
@@ -21,7 +21,8 @@ public class Node implements Executable, Cloneable {
 	private NodeType type;
 
 	/**
-	 * Node的执行方法，所有的Executable对象的执行操作都会到这个方法上来
+	 * Node的执行方法，所有的Executable对象的执行操作都会到这个方法上来。
+	 * 一个Node的执行逻辑，实际上是其对应的{@link NodeComponent#process()}的执行逻辑
 	 */
 	@Override
 	public void execute(Integer slotIndex) {
@@ -31,7 +32,10 @@ public class Node implements Executable, Cloneable {
 		// 这里需要保证所有的NodeComponent子类都有无参构造方法
 		NodeComponent nodeComp = null;
 		try {
+			// 根据Node的类型创建NodeComponent对象
 			nodeComp = (NodeComponent) clazz.newInstance();
+			nodeComp.setSlotIndex(slotIndex);
+			nodeComp.setNodeId(id);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new ComponentInstantiationException("Class[%s] have no public|no arguments Constructor for instantiation", clazz);
 		}

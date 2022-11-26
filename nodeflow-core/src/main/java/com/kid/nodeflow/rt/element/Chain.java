@@ -1,7 +1,6 @@
 package com.kid.nodeflow.rt.element;
 
 import cn.hutool.core.collection.CollUtil;
-import com.kid.nodeflow.rt.DataBus;
 import com.kid.nodeflow.rt.element.flow.Flow;
 import java.util.List;
 
@@ -29,6 +28,10 @@ public class Chain implements Executable {
 		this.flowList = flowList;
 	}
 
+	public static Chain emptyChain(String id) {
+		return new Chain(id, null);
+	}
+
 	/**
 	 * Chain的执行方法
 	 */
@@ -39,8 +42,8 @@ public class Chain implements Executable {
 				return;
 			}
 			flowList.forEach(flow -> flow.execute(slotIndex));
-		} finally {
-			DataBus.freeSlot(slotIndex);
+		} catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 

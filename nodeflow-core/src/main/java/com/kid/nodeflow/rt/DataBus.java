@@ -2,7 +2,7 @@ package com.kid.nodeflow.rt;
 
 import static com.kid.nodeflow.common.BaseConstant.DEFAULT_SLOTS_SIZE;
 
-import com.kid.nodeflow.exception.SystemInitializeException;
+import com.kid.nodeflow.exception.rt.SystemInitializeException;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,7 +49,6 @@ public class DataBus {
 		// CAS保证线程安全
 		Integer index = FREE_INDEX.poll();
 		Slot slot = new Slot(index);
-		System.out.printf("Slot[%s] is assigning\n", index);
 		SLOTS.put(index, slot);
 		return index;
 	}
@@ -60,10 +59,6 @@ public class DataBus {
 	public static void freeSlot(Integer index) {
 		if (SLOTS.containsKey(index)) {
 			FREE_INDEX.offer(index);
-			// no need to remove SLOTS[index]
-			System.out.printf("Slot[%s] is set free\n", index);
-		} else {
-			System.out.printf("Slot[%s] is not exist\n", index);
 		}
 	}
 

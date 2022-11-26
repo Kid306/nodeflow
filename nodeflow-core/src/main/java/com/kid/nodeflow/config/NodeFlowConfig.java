@@ -24,6 +24,12 @@ public class NodeFlowConfig {
 	private List<String> ruleSourcePath = CollUtil.list(false, "classpath:flow/test.xml");
 
 	/**
+	 * 定位子流程的时机： runtime | resolve
+	 * TODO 目前只支持runtime
+	 */
+	private String timeToLocateSubProcess = "runtime";
+
+	/**
 	 * 初始SLOTS槽大小
 	 */
 	private Integer initialSlotsSize = DEFAULT_SLOTS_SIZE;
@@ -54,5 +60,13 @@ public class NodeFlowConfig {
 
 	public void setInitialSlotsSize(Integer initialSlotsSize) {
 		this.initialSlotsSize = initialSlotsSize;
+	}
+
+	public String getTimeToLocateSubProcess() {
+		return timeToLocateSubProcess;
+	}
+
+	public void setTimeToLocateSubProcess(String timeToLocateSubProcess) {
+		this.timeToLocateSubProcess = timeToLocateSubProcess;
 	}
 }

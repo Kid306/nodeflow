@@ -18,11 +18,18 @@ public class FlowParserTest {
 		executor = new ChainExecutor();
 	}
 
-	/**
-	 * 针对Flow的合并测试
-	 */
+	// /**
+	//  * 针对Flow的合并测试
+	//  */
+	// @Test
+	// public void test01_flowMerge() {
+	// 	System.out.println(executor.exec("chain2"));
+	// }
+
 	@Test
-	public void test01() {
-		System.out.println(executor.exec("chain2"));
+	public void test02_ifNodeComponent() {
+		// for (int i = 0; i < 10; i++) {
+		System.out.println(executor.exec("chain4"));
+		// }
 	}
 }

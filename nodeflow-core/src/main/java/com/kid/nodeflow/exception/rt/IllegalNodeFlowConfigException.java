@@ -1,4 +1,4 @@
-package com.kid.nodeflow.exception;
+package com.kid.nodeflow.exception.rt;
 
 public class IllegalNodeFlowConfigException extends RuntimeException {
 	public IllegalNodeFlowConfigException(String message) {

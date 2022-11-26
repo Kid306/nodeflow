@@ -1,16 +1,20 @@
 package com.kid.nodeflow.rt;
 
+import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import com.kid.nodeflow.config.NodeFlowConfig;
-import com.kid.nodeflow.exception.IllegalNodeFlowConfigException;
-import com.kid.nodeflow.exception.SystemInitializeException;
+import com.kid.nodeflow.exception.rt.IllegalNodeFlowConfigException;
+import com.kid.nodeflow.exception.rt.SystemInitializeException;
 import com.kid.nodeflow.parser.FlowParserProvider;
 import com.kid.nodeflow.parser.base.FlowParser;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * NodeFlow运行时类，控制着NodeFlow的运行时状态
@@ -18,6 +22,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version 1.0
  */
 public class NodeFlowRuntime {
+	private static final Logger log = LoggerFactory.getLogger(NodeFlowRuntime.class);
+
+	// 保存了当前正在运行的ChainExecutor
+	private static final Set<ChainExecutor> RUNNING_EXECUTOR = new ConcurrentHashSet<>();
 	// 未初始化、未启动
 	private static final Integer UN_INITIALIZED = 0;
 	// 初始化中、未启动
@@ -41,12 +49,12 @@ public class NodeFlowRuntime {
 			throw new IllegalNodeFlowConfigException("NodeFlowConfig can not be null");
 		}
 		if (isStart()) {
-			// TODO 打印日志
+			log.warn("NodeFlow is starting, can not load config");
 			return;
 		}
 		synchronized (NodeFlowRuntime.class) {
 			// 打印日志
-			System.out.println("加载配置文件");
+			log.info("NodeFlow config loaded successfully");
 			NodeFlowRuntime.config = config;
 			init();
 		}
@@ -57,6 +65,16 @@ public class NodeFlowRuntime {
 	 */
 	public static NodeFlowConfig getConfig() {
 		return config;
+	}
+
+	public static void registerExecutor(ChainExecutor executor) {
+		if (executor != null) {
+			RUNNING_EXECUTOR.add(executor);
+		}
+	}
+
+	static void removeExecutor(ChainExecutor executor) {
+		RUNNING_EXECUTOR.remove(executor);
 	}
 
 	public static boolean needInit() {
@@ -72,23 +90,26 @@ public class NodeFlowRuntime {
 	}
 
 	public static boolean isStart() {
-		return FLOW_STATE.get() >= STARTED;
+		return !RUNNING_EXECUTOR.isEmpty();
 	}
 
-	static void setUnInit() {
+	// 下列的同步保证了loadConfig操作与状态位设置的互斥
+	synchronized static void setUnInit() {
 		FLOW_STATE.set(UN_INITIALIZED);
 	}
 
-	static void setInitializing() {
+	synchronized static void setInitializing() {
 		FLOW_STATE.set(INITIALIZING);
 	}
 
-	static void setInit() {
+	synchronized static void setInit() {
 		FLOW_STATE.set(UN_START);
 	}
 
-	static void setStart() {
-		FLOW_STATE.set(STARTED);
+	synchronized static void setStart() {
+		if (!RUNNING_EXECUTOR.isEmpty()) {
+			FLOW_STATE.set(STARTED);
+		}
 	}
 
 	/**
@@ -102,7 +123,7 @@ public class NodeFlowRuntime {
 	 * </p>
 	 */
 	static void init() {
-		System.out.println("NodeFlow初始化");
+		log.info("NodeFlow is starting init");
 		// 0. 设置标志位
 		NodeFlowRuntime.setInitializing();
 		DataBus.init();
@@ -128,6 +149,7 @@ public class NodeFlowRuntime {
 			}
 			// 3. 设置标志位
 			NodeFlowRuntime.setInit();
+			log.info("NodeFlow init successfully");
 		} catch (Exception e) {
 			// x. rollback
 			DataBus.clear();

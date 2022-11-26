@@ -1,4 +1,4 @@
-package com.kid.nodeflow.exception;
+package com.kid.nodeflow.exception.rt;
 
 public class ComponentInstantiationException extends RuntimeException {
 	public ComponentInstantiationException(String message) {

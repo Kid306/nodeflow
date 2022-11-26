@@ -10,8 +10,8 @@ import com.kid.nodeflow.builder.FlowBuilder;
 import com.kid.nodeflow.builder.entity.ChainProp;
 import com.kid.nodeflow.rt.element.Executable;
 import com.kid.nodeflow.enums.FlowType;
-import com.kid.nodeflow.exception.IllegalElementTypeException;
-import com.kid.nodeflow.exception.IllegalFlowTypeException;
+import com.kid.nodeflow.exception.rt.IllegalElementTypeException;
+import com.kid.nodeflow.exception.rt.IllegalFlowTypeException;
 import com.kid.nodeflow.expression.ExpressionParserHelper;
 import com.kid.nodeflow.parser.helper.ParserHelper;
 import java.util.ArrayList;
@@ -58,6 +58,7 @@ public class BaseXmlFlowParser extends XmlFlowParser {
 				log.error("Undefined flow type: {}", flowName);
 				throw new IllegalFlowTypeException("Undefined flow type: [%s]", flowName);
 			}
+			// 解析value
 			List<Executable> executableList = ExpressionParserHelper.resolveValue(flowValue);
 			// 考虑相邻Flow的逻辑合并
 			if (CollUtil.isNotEmpty(chain.getFlowList()) && CollUtil.getLast(chain.getFlowList()).getFlowType().equals(flowType)) {

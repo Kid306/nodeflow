@@ -9,8 +9,8 @@ import com.kid.nodeflow.builder.entity.NodeProp;
 import com.kid.nodeflow.rt.element.Executable;
 import com.kid.nodeflow.rt.element.flow.Flow;
 import com.kid.nodeflow.enums.NodeType;
-import com.kid.nodeflow.exception.UnInitializedFlowException;
-import com.kid.nodeflow.exception.NodeClassNotFoundException;
+import com.kid.nodeflow.exception.rt.UnInitializedFlowException;
+import com.kid.nodeflow.exception.rt.NodeClassNotFoundException;
 import java.util.List;
 import java.util.function.Consumer;
 import org.dom4j.Document;
@@ -46,7 +46,7 @@ public class ParserHelper {
 	}
 
 	/**
-	 * 根据NodeProp来创建Node对象
+	 * 根据NodeProp来创建Node对象，并且加载到FlowBus中
 	 */
 	public static void buildNode(NodeProp nodeProp) {
 		if (nodeProp == null) {

@@ -5,16 +5,29 @@
 		<node id="b" class="com.kid.nodeflow.test.component.ComponentB"/>
 		<node id="c" class="com.kid.nodeflow.test.component.ComponentC"/>
 		<node id="d" class="com.kid.nodeflow.test.component.ComponentD"/>
+		<node id="e" class="com.kid.nodeflow.test.component.ComponentE"/>
 	</nodes>
 
 	<chains>
-		<chain id="chain1">
-			<then value="a,b"/>
-		</chain>
+		<!--<chain id="chain1">-->
+		<!--	<then value="a,b"/>-->
+		<!--</chain>-->
 
-		<chain id="chain2">
-			<then value="  a, b   "/>
-			<then value="  c,  d  "/>
+		<!--<chain id="chain2">-->
+		<!--	<then value="  a, b   "/>-->
+		<!--	<then value="  c,  d  "/>-->
+		<!--</chain>-->
+
+		<!--<chain id="chain3">-->
+		<!--	<then value = "a, e(c|d)"/>-->
+		<!--	<then value="b, c"/>-->
+		<!--	<then value="e(a| c), d"/>-->
+		<!--</chain>-->
+
+		<chain id="chain4">
+			<then value="a, b"/>
+			<then value="e (c), a"/>
+			<then value="d"/>
 		</chain>
 	</chains>
 </flow>

@@ -1,9 +1,10 @@
 package com.kid.nodeflow.rt;
 
-import com.kid.nodeflow.rt.element.flow.Flow;
 import com.kid.nodeflow.enums.NodeType;
 import com.kid.nodeflow.rt.element.Chain;
+import com.kid.nodeflow.rt.element.Executable;
 import com.kid.nodeflow.rt.element.Node;
+import com.kid.nodeflow.rt.element.flow.Flow;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,17 @@ public class FlowBus {
 
 	static void init() {
 		// do nothing
+	}
+
+	/**
+	 * 该方法保证了node与子流程chain同名时的优先级
+	 */
+	public static Executable getExecutable(String id) {
+		Node node = getNode(id);
+		if (node != null) {
+			return node;
+		}
+		return getChain(id);
 	}
 
 	/**

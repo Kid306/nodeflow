@@ -2,6 +2,7 @@ package com.kid.nodeflow.enums;
 
 import com.kid.nodeflow.core.component.IfNodeComponent;
 import com.kid.nodeflow.core.component.NodeComponent;
+import java.util.regex.Pattern;
 
 /**
  * Node类型枚举类
@@ -11,27 +12,17 @@ import com.kid.nodeflow.core.component.NodeComponent;
  */
 public enum NodeType {
 
-	NODE_COMMON("common", NodeComponent.class),
-	NODE_IF("if", IfNodeComponent.class);
+	NODE_COMMON("common", NodeComponent.class, Pattern.compile("^\\w+$")),
+	NODE_IF("if", IfNodeComponent.class, Pattern.compile("^\\w+\\s*\\(\\s*\\w+\\s*(\\|\\s*\\w+\\s*)?\\)$"));
 
 	private final String name;
 	private final Class<? extends NodeComponent> clazz;
+	public final Pattern pattern;
 
-	NodeType(String name, Class<? extends NodeComponent> clazz) {
+	NodeType(String name, Class<? extends NodeComponent> clazz, Pattern pattern) {
 		this.name = name;
 		this.clazz = clazz;
-	}
-
-	public static NodeType getNodeType(Class<?> clazz) {
-		if (clazz == null) {
-			return null;
-		}
-		for (NodeType type : values()) {
-			if (type.getClazz().equals(clazz)) {
-				return type;
-			}
-		}
-		return null;
+		this.pattern = pattern;
 	}
 
 	/**
@@ -45,6 +36,18 @@ public enum NodeType {
 			// never occur
 		}
 		return nodeComp;
+	}
+
+	public static NodeType getNodeType(Class<?> clazz) {
+		if (clazz == null) {
+			return null;
+		}
+		for (NodeType type : values()) {
+			if (type.getClazz().equals(clazz)) {
+				return type;
+			}
+		}
+		return null;
 	}
 
 	public String getName() {

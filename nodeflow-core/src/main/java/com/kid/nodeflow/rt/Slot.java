@@ -10,6 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  */
 public class Slot {
+	public static class SlotConstant {
+		public static final String IF_PREFIX = "_IF#";
+	}
+
 	// Slot对应的槽位
 	private Integer index;
 
@@ -23,8 +27,8 @@ public class Slot {
 		data.put(key, value);
 	}
 
-	public Object getData(String key) {
-		return data.get(key);
+	public <T> T getData(String key) {
+		return (T) data.get(key);
 	}
 
 	public Integer getIndex() {

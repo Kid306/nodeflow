@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.kid.nodeflow.rt.FlowBus;
 import com.kid.nodeflow.rt.element.Chain;
 import com.kid.nodeflow.rt.element.flow.Flow;
-import com.kid.nodeflow.exception.NodeBuildException;
+import com.kid.nodeflow.exception.rt.NodeBuildException;
 import java.util.ArrayList;
 import java.util.List;
 
