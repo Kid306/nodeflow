@@ -1,6 +1,7 @@
 package com.kid.nodeflow.parser.base;
 
 import cn.hutool.core.collection.CollUtil;
+import com.kid.nodeflow.builder.entity.ChainProp;
 import com.kid.nodeflow.exception.NodeClassNotFoundException;
 import com.kid.nodeflow.exception.RuleSourceParseException;
 import com.kid.nodeflow.exception.ChainsLabelNotFoundException;
@@ -52,5 +53,5 @@ public abstract class XmlFlowParser implements FlowParser {
 	 * <p>解析单个以XML表示的chain</p>
 	 * <p>交给子类实现</p>
 	 */
-	public abstract void parseChain(Element chainElement);
+	public abstract ChainProp parseChain(Element chainElement);
 }

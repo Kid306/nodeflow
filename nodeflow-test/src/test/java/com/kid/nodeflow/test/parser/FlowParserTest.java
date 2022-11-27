@@ -28,8 +28,6 @@ public class FlowParserTest {
 
 	@Test
 	public void test02_ifNodeComponent() {
-		// for (int i = 0; i < 10; i++) {
-		System.out.println(executor.exec("chain4"));
-		// }
+		System.out.println(executor.exec("chain1"));
 	}
 }

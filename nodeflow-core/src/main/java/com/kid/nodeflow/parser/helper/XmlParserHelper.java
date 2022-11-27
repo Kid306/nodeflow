@@ -8,17 +8,19 @@ import static com.kid.nodeflow.common.BaseConstant.NODE;
 import static com.kid.nodeflow.common.BaseConstant.NODES;
 
 import cn.hutool.core.collection.CollUtil;
+import com.kid.nodeflow.builder.ChainBuilder;
+import com.kid.nodeflow.builder.entity.ChainProp;
 import com.kid.nodeflow.builder.entity.NodeProp;
+import com.kid.nodeflow.exception.ChainsLabelNotFoundException;
 import com.kid.nodeflow.exception.NodeClassNotFoundException;
 import com.kid.nodeflow.exception.NodesLabelNotFoundException;
-import com.kid.nodeflow.exception.ChainsLabelNotFoundException;
 import com.kid.nodeflow.rt.FlowBus;
 import com.kid.nodeflow.rt.element.Chain;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -65,7 +67,7 @@ public class XmlParserHelper {
 	 * @param documents   待解析<code>Document</code>对象集合
 	 * @param chainParser 用于解析单个chain的方法
 	 */
-	public static void parseChains(List<Document> documents, Consumer<Element> chainParser)
+	public static void parseChains(List<Document> documents, Function<Element, ChainProp> chainParser)
 			throws ChainsLabelNotFoundException {
 		parseChains(documents, chainParser, XML_SET);
 	}
@@ -80,7 +82,7 @@ public class XmlParserHelper {
 	 * @param chainParser 用于解析单个chain的方法
 	 * @param nameSet     去重集合
 	 */
-	public static void parseChains(List<Document> documents, Consumer<Element> chainParser, Set<String> nameSet)
+	public static void parseChains(List<Document> documents, Function<Element, ChainProp> chainParser, Set<String> nameSet)
 			throws ChainsLabelNotFoundException {
 		if (CollUtil.isEmpty(documents)) {
 			return;
@@ -91,8 +93,15 @@ public class XmlParserHelper {
 			if (chains == null) {
 				throw new ChainsLabelNotFoundException("chains label is not found in Rule Source");
 			}
+			// 进行chainId去重
+			chains.elements(CHAIN).forEach(chain -> {
+				String chainId = chain.attribute(ID).getText();
+				if (!nameSet.add(chainId)) {
+					log.info("chain({}) is duplicate", chainId);
+				}
+			});
 			// 向FlowBus中放入占位Chain
-			chains.elements(CHAIN).forEach(chain -> FlowBus.addChain(Chain.emptyChain(chain.attribute(ID).getText())));
+			nameSet.forEach(chainId -> FlowBus.addChain(Chain.emptyChain(chainId)));
 		}
 		for (Document document : documents) {
 			Element root = document.getRootElement();
@@ -105,17 +114,14 @@ public class XmlParserHelper {
 					continue;
 				}
 				String chainId = chain.attribute(ID).getText();
-				// 这里用作打印日志
-				if (!nameSet.add(chainId)) {
-					log.info("chain({}) is duplicate", chainId);
-				} else {
+				// 第一次匹配的解析，后续重复的不再解析
+				if (nameSet.remove(chainId)) {
 					// 函数调用
-					chainParser.accept(chain);
-					log.info("chain({}) is added to FlowBus", chainId);
+					ChainProp chainProp = chainParser.apply(chain);
+					// 向FlowBus中添加Chain，注意不是直接添加，而是一个属性copy过程，目的就是为了保证占位Chain的正确指向
+					ChainBuilder.start().assign().id(chainProp.getId()).flowList(chainProp.getFlowList()).build();
 				}
 			}
 		}
-		// 清空容器
-		nameSet.clear();
 	}
 }

@@ -1,5 +1,6 @@
 package com.kid.nodeflow.builder;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.kid.nodeflow.exception.rt.NodeBuildException;
@@ -22,6 +23,9 @@ public class ChainBuilder {
 
 	private final Chain chain;
 
+	// 该标志位为true，表示不会向FlowBus中添加一个新的Chain，而是找一个相同id的Chain进行属性赋值操作
+	private boolean assign = false;
+
 	private ChainBuilder() {
 		this.chain = new Chain();
 	}
@@ -29,8 +33,14 @@ public class ChainBuilder {
 	public void build() {
 		// build前的简单检查
 		checkBuild();
-		// 向FlowBus中添加Chain
-		FlowBus.addChain(chain);
+		if (!assign) {
+			// 向FlowBus中添加Chain
+			FlowBus.addChain(chain);
+		} else {
+			// 否则找到目的Chain进行属性赋值操作
+			Chain oldChain = FlowBus.getChain(chain.getId());
+			BeanUtil.copyProperties(chain, oldChain);
+		}
 		log.info("chain({}) is added to FlowBus", chain.getId());
 	}
 
@@ -48,6 +58,11 @@ public class ChainBuilder {
 
 	public ChainBuilder flowList(List<Flow> flowList) {
 		this.chain.setFlowList(flowList);
+		return this;
+	}
+
+	public ChainBuilder assign() {
+		this.assign = true;
 		return this;
 	}
 

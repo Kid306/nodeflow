@@ -58,7 +58,7 @@ public class ExpressionParserHelper {
 	}
 
 	/**
-	 * 解析NODE_COMMON类型的expression，没有进行expression检查，默认：true == isNodeExpression(expression, NODE_COMMON)
+	 * 解析NODE_COMMON类型或者子流程的expression，没有进行expression检查，默认：true == isNodeExpression(expression, NODE_COMMON)
 	 */
 	public static Executable resolveCommonExpression(String expression)
 			throws ExecutableItemNotFoundException {

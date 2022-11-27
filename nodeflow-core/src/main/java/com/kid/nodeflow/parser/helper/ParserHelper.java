@@ -4,6 +4,7 @@ import static com.kid.nodeflow.common.BaseConstant.COMP_PACKAGE;
 import static com.kid.nodeflow.enums.FlowType.FLOW_THEN;
 
 import com.kid.nodeflow.builder.NodeBuilder;
+import com.kid.nodeflow.builder.entity.ChainProp;
 import com.kid.nodeflow.builder.entity.NodeProp;
 import com.kid.nodeflow.enums.NodeType;
 import com.kid.nodeflow.exception.NodeClassNotFoundException;
@@ -13,6 +14,7 @@ import com.kid.nodeflow.rt.element.Executable;
 import com.kid.nodeflow.rt.element.flow.Flow;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -68,8 +70,8 @@ public class ParserHelper {
 					.type(nodeType)
 					.build();
 		} catch (ClassNotFoundException e) {
-			log.error("node class not found: \"{}\"", className);
-			throw new NodeClassNotFoundException("node class not found: \"%s\"", className);
+			log.error("node class not found: \"{}\".", className);
+			throw new NodeClassNotFoundException("node class not found: \"%s\".", className);
 		}
 	}
 
@@ -93,7 +95,7 @@ public class ParserHelper {
 	}
 
 	// XML解析Chains方法
-	public static void parseChains(List<Document> documents, Consumer<Element> chainParser)
+	public static void parseChains(List<Document> documents, Function<Element, ChainProp> chainParser)
 			throws ChainsLabelNotFoundException {
 		XmlParserHelper.parseChains(documents, chainParser);
 	}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+	<!-- 彩色日志格式 -->
+	<property name="CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %yellow([%thread]) %cyan(%logger{50}) - %msg%n"/>
+
+	<contextName>${APP_NAME}</contextName>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!--选择具体包的日志输出级别-->
+	<!--additivity="false"表示不使用root的配置-->
+	<logger name="com.kid.nodeflow" level="DEBUG" additivity="false">
+		<appender-ref ref="STDOUT"/>
+	</logger>
+
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
+

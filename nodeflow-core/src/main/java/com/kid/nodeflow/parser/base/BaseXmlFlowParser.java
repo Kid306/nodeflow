@@ -4,7 +4,6 @@ import static com.kid.nodeflow.common.BaseConstant.ID;
 import static com.kid.nodeflow.common.BaseConstant.VALUE;
 
 import cn.hutool.core.collection.CollUtil;
-import com.kid.nodeflow.builder.ChainBuilder;
 import com.kid.nodeflow.builder.FlowBuilder;
 import com.kid.nodeflow.builder.entity.ChainProp;
 import com.kid.nodeflow.enums.FlowType;
@@ -27,9 +26,10 @@ public class BaseXmlFlowParser extends XmlFlowParser {
 	/**
 	 * 解析单个以XML表示的chain
 	 * @param chainElement 单个XML表示的chain
+	 * @return 解析出的ChainProp中间对象
 	 */
 	@Override
-	public void parseChain(Element chainElement) {
+	public ChainProp parseChain(Element chainElement) {
 		// 这里不需要考虑chainId is blank的情况
 		String chainId = chainElement.attribute(ID).getText();
 		// 使用中间对象而不是创建一个Chain，防止解析中出现异常而导致需要从FlowBus中将Chain移除
@@ -43,8 +43,8 @@ public class BaseXmlFlowParser extends XmlFlowParser {
 			String flowValue = element.attribute(VALUE).getText();
 			FlowType flowType = FlowType.getFlowType(flowName);
 			// 在BaseXmlFlowParser中，chain标签中只允许出现then标签和when标签
-			if (FlowType.FLOW_THEN.equals(flowType) || FlowType.FLOW_WHEN.equals(flowType)) {
-				throw new IllegalFlowTypeException("Undefined flow type in BaseXmlExpression: {%s}", flowName);
+			if (!FlowType.FLOW_THEN.equals(flowType) && !FlowType.FLOW_WHEN.equals(flowType)) {
+				throw new IllegalFlowTypeException("Undefined flow type in BaseXmlExpression: %s", flowName);
 			}
 			// 解析value
 			List<Executable> executableList = ExpressionParserHelper.resolveValue(flowValue);
@@ -56,7 +56,6 @@ public class BaseXmlFlowParser extends XmlFlowParser {
 				chain.addFlow(FlowBuilder.buildFlow(flowType, executableList));
 			}
 		}
-		// 向FlowBus中添加Chain
-		ChainBuilder.start().id(chain.getId()).flowList(chain.getFlowList()).build();
+		return chain;
 	}
 }

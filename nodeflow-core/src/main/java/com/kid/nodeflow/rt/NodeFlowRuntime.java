@@ -139,7 +139,7 @@ public class NodeFlowRuntime {
 				InputStream is = NodeFlowRuntime.class.getResourceAsStream(path);
 				// 继续遍历其他配置文件
 				if (is == null) {
-					log.error("rule source not found: {}", path);
+					log.warn("rule source not found: {}", path);
 					continue;
 				}
 				String fileName = FileUtil.getName(path);

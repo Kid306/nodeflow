@@ -9,25 +9,15 @@
 	</nodes>
 
 	<chains>
-		<!--<chain id="chain1">-->
-		<!--	<then value="a,b"/>-->
-		<!--</chain>-->
 
-		<!--<chain id="chain2">-->
-		<!--	<then value="  a, b   "/>-->
-		<!--	<then value="  c,  d  "/>-->
-		<!--</chain>-->
-
-		<!--<chain id="chain3">-->
-		<!--	<then value = "a, e(c|d)"/>-->
-		<!--	<then value="b, c"/>-->
-		<!--	<then value="e(a| c), d"/>-->
-		<!--</chain>-->
-
-		<chain id="chain4">
+		<chain id="chain1">
 			<then value="a, b"/>
 			<then value="e (c), a"/>
-			<then value="d"/>
+			<then value="chain2"/>
+		</chain>
+
+		<chain id="chain2">
+			<then value="a, b"/>
 		</chain>
 	</chains>
 </flow>
