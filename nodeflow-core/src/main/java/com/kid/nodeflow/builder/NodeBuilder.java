@@ -2,6 +2,7 @@ package com.kid.nodeflow.builder;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.kid.nodeflow.core.component.NodeComponent;
 import com.kid.nodeflow.enums.NodeType;
 import com.kid.nodeflow.exception.rt.NodeBuildException;
 import com.kid.nodeflow.rt.FlowBus;
@@ -40,11 +41,8 @@ public class NodeBuilder {
 		// build前的简单检查
 		checkBuild();
 		// 向FlowBus中添加Node
-		Node oldNode = FlowBus.getNode(node.getId());
-		FlowBus.addNode(node);
-		log.info("node({}, {}) is added to FlowBus", node.getId(), node.getClazz());
-		if (oldNode != null) {
-			log.info("node({}, {}) is overwritten", oldNode.getId(), oldNode.getClazz());
+		if (!FlowBus.containNode(node.getId())) {
+			FlowBus.addNode(node);
 		}
 	}
 
@@ -58,17 +56,22 @@ public class NodeBuilder {
 		if (StrUtil.isBlank(node.getId())) {
 			errorInfos.add("node's id is blank");
 		}
-		if (node.getClazz() == null) {
-			errorInfos.add("node's class is null");
-		}
 		if (node.getType() == null) {
 			errorInfos.add("node's type is null");
+		}
+		if (node.getNodeComponent() == null) {
+			errorInfos.add("node's nodeComponent is null");
 		}
 		throw new NodeBuildException(CollUtil.join(errorInfos, ", ", "[", "]"));
 	}
 
 	public NodeBuilder id(String id) {
 		this.node.setId(id);
+		return this;
+	}
+
+	public NodeBuilder className(String className) {
+		this.node.setClassName(className);
 		return this;
 	}
 
@@ -79,6 +82,11 @@ public class NodeBuilder {
 
 	public NodeBuilder type(NodeType type) {
 		this.node.setType(type);
+		return this;
+	}
+
+	public NodeBuilder component(NodeComponent component) {
+		this.node.setNodeComponent(component);
 		return this;
 	}
 }

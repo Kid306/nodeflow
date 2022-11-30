@@ -42,7 +42,7 @@ public class ExpressionNode {
 	}
 
 	/**
-	 * 解析当前的expression，生成一个可执行的Node
+	 * 解析当前的expression，从FlowBus中找到一个可执行对象（Node | Flow | Chain）
 	 */
 	public static Executable resolve(String expression) {
 		try {

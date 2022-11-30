@@ -14,7 +14,8 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 /**
- * 解析Xml规则文件的基础解析器
+ * 解析Xml规则文件的抽象解析器。所有解析Xml规则文件的解析器都需要继承这个类，
+ * 并且实现其parseChain方法
  *
  * @author cwk
  * @version 1.0

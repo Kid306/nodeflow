@@ -1,5 +1,6 @@
 package com.kid.nodeflow.test.parser;
 
+import cn.hutool.core.collection.ListUtil;
 import com.kid.nodeflow.config.NodeFlowConfig;
 import com.kid.nodeflow.rt.ChainExecutor;
 import com.kid.nodeflow.rt.NodeFlowRuntime;
@@ -12,10 +13,9 @@ public class FlowParserTest {
 	@Before
 	public void init() {
 		NodeFlowConfig config = new NodeFlowConfig();
-		config.addRuleSourcePath("/core/test.xml");
-		System.out.println(config.getRuleSourcePath());
-		NodeFlowRuntime.loadConfig(config);
-		executor = new ChainExecutor();
+		config.setSourcePath(ListUtil.toList("/core/test.xml"));
+		System.out.println(config.getSourcePath());
+		executor = NodeFlowRuntime.loadConfig(config);
 	}
 
 	// /**

@@ -9,4 +9,7 @@ public class SystemInitializeException extends RuntimeException {
 		super(String.format(template, values));
 	}
 
+	public SystemInitializeException(Throwable cause) {
+		super(cause);
+	}
 }

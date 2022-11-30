@@ -1,8 +1,5 @@
 package com.kid.nodeflow.config;
 
-import static com.kid.nodeflow.common.BaseConstant.DEFAULT_SLOTS_SIZE;
-
-import cn.hutool.core.collection.CollUtil;
 import java.util.List;
 
 /**
@@ -13,26 +10,27 @@ import java.util.List;
  */
 public class NodeFlowConfig {
 
+
 	/**
 	 *  true：在程序启动时就解析配置文件
 	 */
-	private Boolean parseOnStart = true;
+	private Boolean parseOnStart;
 
 	/**
 	 * 规则文件的配置路径
 	 */
-	private List<String> ruleSourcePath = CollUtil.list(false, "classpath:flow/test.xml");
+	private List<String> sourcePath;
 
 	/**
 	 * 定位子流程的时机： runtime | resolve
 	 * TODO 目前只支持runtime
 	 */
-	private String timeToLocateSubProcess = "runtime";
+	private String timeToLocateSubChain;
 
 	/**
 	 * 初始SLOTS槽大小
 	 */
-	private Integer initialSlotsSize = DEFAULT_SLOTS_SIZE;
+	private Integer slotsSize;
 
 	public Boolean getParseOnStart() {
 		return parseOnStart;
@@ -42,31 +40,30 @@ public class NodeFlowConfig {
 		this.parseOnStart = parseOnStart;
 	}
 
-	public List<String> getRuleSourcePath() {
-		return ruleSourcePath;
+	public List<String> getSourcePath() {
+		return sourcePath;
 	}
 
-	public void setRuleSourcePath(List<String> ruleSourcePath) {
-		this.ruleSourcePath = ruleSourcePath;
+	public NodeFlowConfig setSourcePath(List<String> sourcePath) {
+		this.sourcePath = sourcePath;
+		return this;
 	}
 
-	public void addRuleSourcePath(String path) {
-		ruleSourcePath.add(path);
+	public String getTimeToLocateSubChain() {
+		return timeToLocateSubChain;
 	}
 
-	public Integer getInitialSlotsSize() {
-		return initialSlotsSize;
+	public NodeFlowConfig setTimeToLocateSubChain(String timeToLocateSubChain) {
+		this.timeToLocateSubChain = timeToLocateSubChain;
+		return this;
 	}
 
-	public void setInitialSlotsSize(Integer initialSlotsSize) {
-		this.initialSlotsSize = initialSlotsSize;
+	public Integer getSlotsSize() {
+		return slotsSize;
 	}
 
-	public String getTimeToLocateSubProcess() {
-		return timeToLocateSubProcess;
-	}
-
-	public void setTimeToLocateSubProcess(String timeToLocateSubProcess) {
-		this.timeToLocateSubProcess = timeToLocateSubProcess;
+	public NodeFlowConfig setSlotsSize(Integer slotsSize) {
+		this.slotsSize = slotsSize;
+		return this;
 	}
 }

@@ -4,6 +4,7 @@ import static com.kid.nodeflow.common.ResponseCode.CHAIN_NOT_FOUND;
 import static com.kid.nodeflow.common.ResponseCode.SUCCESS;
 import static com.kid.nodeflow.common.ResponseCode.SYSTEM_NOT_INIT;
 
+import com.kid.nodeflow.config.NodeFlowConfig;
 import com.kid.nodeflow.core.NodeFlowResponse;
 import com.kid.nodeflow.exception.rt.ChainNotFoundException;
 import com.kid.nodeflow.rt.element.Chain;
@@ -17,17 +18,23 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  */
 public class ChainExecutor {
+	private NodeFlowConfig nodeFlowConfig;
+
 	private static final Logger log = LoggerFactory.getLogger(ChainExecutor.class);
 
-	public ChainExecutor() {
-		if (needInit()) {
-			// 初始化是一个全局并且十分消耗性能的工作，要保证同步
-			synchronized (NodeFlowRuntime.class) {
-				if (needInit()) {
-					NodeFlowRuntime.init();
-				}
-			}
-		}
+	// public ChainExecutor() {
+	// 	if (needInit()) {
+	// 		// 初始化是一个全局并且十分消耗性能的工作，要保证同步
+	// 		synchronized (NodeFlowRuntime.class) {
+	// 			if (needInit()) {
+	// 				NodeFlowRuntime.init();
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	public ChainExecutor(NodeFlowConfig nodeFlowConfig) {
+		this.nodeFlowConfig = nodeFlowConfig;
 	}
 
 	/**
@@ -39,7 +46,6 @@ public class ChainExecutor {
 					.success(false)
 					.status(SYSTEM_NOT_INIT);
 		}
-		NodeFlowRuntime.registerExecutor(this);
 		Integer slotIndex = DataBus.nextSlot();
 		log.info("Chain[{}] is assigned executing in Slot[{}]", chainId, slotIndex);
 		try {
@@ -54,7 +60,6 @@ public class ChainExecutor {
 			DataBus.freeSlot(slotIndex);
 			log.info("Slot[{}] is set free", slotIndex);
 			NodeFlowRuntime.setInit();
-			NodeFlowRuntime.removeExecutor(this);
 		}
 	}
 

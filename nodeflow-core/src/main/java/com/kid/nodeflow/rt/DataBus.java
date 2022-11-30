@@ -28,8 +28,8 @@ public class DataBus {
 	private static final Queue<Integer> FREE_INDEX = new ConcurrentLinkedQueue<>();
 
 	static void init() {
-		if (!NodeFlowRuntime.isStart()) {
-			SLOT_CAPACITY = NodeFlowRuntime.getConfig().getInitialSlotsSize();
+		if (NodeFlowRuntime.isInitializing()) {
+			SLOT_CAPACITY = NodeFlowRuntime.getConfig().getSlotsSize();
 			FREE_INDEX.addAll(IntStream.range(0, DEFAULT_SLOTS_SIZE)
 					.boxed().collect(Collectors.toList()));
 			IS_INIT.set(true);
@@ -76,7 +76,7 @@ public class DataBus {
 	public static void clear() {
 		// 这里要保证系统没有运行时才可以进行清理工作
 		// 注意：系统的停止运行不是不应该在这里完成，或者说该方法不应该阻塞等待系统停止
-		if (!NodeFlowRuntime.isStart()) {
+		if (NodeFlowRuntime.isUnInitialized()) {
 			SLOT_CAPACITY = DEFAULT_SLOTS_SIZE;
 			SLOTS.clear();
 			FREE_INDEX.clear();

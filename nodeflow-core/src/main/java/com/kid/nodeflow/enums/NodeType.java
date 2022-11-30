@@ -1,5 +1,7 @@
 package com.kid.nodeflow.enums;
 
+import static com.kid.nodeflow.common.BaseConstant.COMP_PACKAGE;
+
 import com.kid.nodeflow.core.component.IfNodeComponent;
 import com.kid.nodeflow.core.component.NodeComponent;
 import java.util.regex.Pattern;
@@ -26,18 +28,28 @@ public enum NodeType {
 	}
 
 	/**
-	 * 通过反射获取NodeComponent对象
+	 * 根据子类Class推测Node类型：如A extend NodeComponent，则可根据A.class获取到getNodeType(NodeComponent.class)
 	 */
-	public NodeComponent newNodeCompInstance() {
-		NodeComponent nodeComp = null;
-		try {
-			nodeComp = clazz.newInstance();
-		} catch (InstantiationException | IllegalAccessException ignore) {
-			// never occur
+	public static NodeType guessType(Class<?> clazz) {
+		if (clazz == null) {
+			return null;
 		}
-		return nodeComp;
+		while (true) {
+			Class<?> superclass = clazz.getSuperclass();
+			if (Object.class.equals(superclass)) {
+				return null;
+			}
+			String packageName = superclass.getPackage().getName();
+			// 如果父类是component包下的组件，则返回组件类型
+			if (packageName.startsWith(COMP_PACKAGE)) {
+				return NodeType.getNodeType(superclass);
+			}
+		}
 	}
 
+	/**
+	 * 根据指定NodeComponent.class获取其对应NodeType
+	 */
 	public static NodeType getNodeType(Class<?> clazz) {
 		if (clazz == null) {
 			return null;

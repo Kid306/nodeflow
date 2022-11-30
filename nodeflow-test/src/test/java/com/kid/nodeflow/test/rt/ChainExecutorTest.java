@@ -14,11 +14,10 @@ public class ChainExecutorTest {
 	@Before
 	public void testBefore() {
 		NodeFlowConfig config = new NodeFlowConfig();
-		config.setRuleSourcePath(Collections.singletonList("/core/test.xml"));
+		config.setSourcePath(Collections.singletonList("/core/test.xml"));
 		NodeFlowRuntime.loadConfig(config);
 		for (int i = 0; i < 1000; i++) {
 			new Thread(() -> {
-				executor = new ChainExecutor();
 			}).start();
 		}
 	}

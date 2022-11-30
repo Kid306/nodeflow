@@ -13,11 +13,17 @@
 
 	<!--选择具体包的日志输出级别-->
 	<!--additivity="false"表示不使用root的配置-->
+
+	<logger name="com.kid.nodeflow.test" level="INFO" additivity="false">
+		<appender-ref ref="STDOUT"/>
+	</logger>
+
 	<logger name="com.kid.nodeflow" level="DEBUG" additivity="false">
 		<appender-ref ref="STDOUT"/>
 	</logger>
 
-	<root level="DEBUG">
+
+	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>

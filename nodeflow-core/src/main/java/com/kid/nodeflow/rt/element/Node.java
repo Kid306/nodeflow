@@ -16,9 +16,13 @@ public class Node implements Executable, Cloneable {
 
 	private String id;
 
+	private String className;
+
 	private Class<?> clazz;
 
 	private NodeType type;
+
+	private NodeComponent nodeComponent;
 
 	/**
 	 * Node的执行方法，所有的Executable对象的执行操作都会到这个方法上来。
@@ -33,6 +37,7 @@ public class Node implements Executable, Cloneable {
 		NodeComponent nodeComp = null;
 		try {
 			// 根据Node的类型创建NodeComponent对象
+			// TODO 后续需要修正，不能每次运行时才创建NodeComponent
 			nodeComp = (NodeComponent) clazz.newInstance();
 			nodeComp.setSlotIndex(slotIndex);
 			nodeComp.setNodeId(id);
@@ -77,6 +82,22 @@ public class Node implements Executable, Cloneable {
 	public Node setType(NodeType type) {
 		this.type = type;
 		return this;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
+	public NodeComponent getNodeComponent() {
+		return nodeComponent;
+	}
+
+	public void setNodeComponent(NodeComponent nodeComponent) {
+		this.nodeComponent = nodeComponent;
 	}
 
 	@Override

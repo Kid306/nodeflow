@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow>
 	<nodes>
-		<node id="a" class="com.kid.nodeflow.test.component.ComponentA"/>
-		<node id="b" class="com.kid.nodeflow.test.component.ComponentB"/>
-		<node id="c" class="com.kid.nodeflow.test.component.ComponentC"/>
-		<node id="d" class="com.kid.nodeflow.test.component.ComponentD"/>
-		<node id="e" class="com.kid.nodeflow.test.component.ComponentE"/>
+		<!--<node id="a" class="com.kid.nodeflow.test.component.ComponentA"/>-->
+		<!--<node id="b" class="com.kid.nodeflow.test.component.ComponentB"/>-->
+		<!--<node id="c" class="com.kid.nodeflow.test.component.ComponentC"/>-->
+		<!--<node id="d" class="com.kid.nodeflow.test.component.ComponentD"/>-->
+		<!--<node id="e" class="com.kid.nodeflow.test.component.ComponentE"/>-->
 	</nodes>
 
 	<chains>
 
-		<chain id="chain1">
-			<then value="a, b"/>
-			<then value="e (c), a"/>
-			<then value="chain2"/>
-		</chain>
+		<!--<chain id="chain1">-->
+		<!--	<then value="a, b"/>-->
+		<!--	<then value="e (c), a"/>-->
+		<!--	<then value="chain2"/>-->
+		<!--</chain>-->
 
-		<chain id="chain2">
-			<then value="a, b"/>
+		<!--<chain id="chain2">-->
+		<!--	<then value="a, b"/>-->
+		<!--</chain>-->
+		<!--<chain id="chain3">-->
+		<!--	<then value="springA"/>-->
+		<!--</chain>-->
+
+		<chain id="chain4">
+			<then value="springA, springB, springC"/>
+			<then value="springE( springA | springC )"/>
+			<then value="springD"/>
 		</chain>
 	</chains>
 </flow>

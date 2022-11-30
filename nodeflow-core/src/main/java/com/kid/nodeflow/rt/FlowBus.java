@@ -1,12 +1,15 @@
 package com.kid.nodeflow.rt;
 
-import com.kid.nodeflow.enums.NodeType;
+import cn.hutool.core.util.StrUtil;
+import com.kid.nodeflow.context.FlowContext;
+import com.kid.nodeflow.context.FlowContextHolder;
+import com.kid.nodeflow.context.lcoal.LocalFlowContext;
+import com.kid.nodeflow.core.component.NodeComponent;
+import com.kid.nodeflow.exception.rt.SystemInitializeException;
 import com.kid.nodeflow.rt.element.Chain;
 import com.kid.nodeflow.rt.element.Executable;
 import com.kid.nodeflow.rt.element.Node;
-import com.kid.nodeflow.rt.element.flow.Flow;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,32 +46,52 @@ public class FlowBus {
 	 * <p>该方法是一个非阻塞方法，该方法执行之前必须保证NodeFlow没有启动</p>
 	 */
 	public static void clear() {
-		if (!NodeFlowRuntime.isStart()) {
+		if (NodeFlowRuntime.isUnInitialized()) {
 			nodeMap.clear();
 			chainMap.clear();
 		}
 	}
 
+	/**
+	 * 向FlowBus中添加Node，添加之前需要获取Node对应的NodeComponent实例对象。
+	 * 针对不同的环境，NodeComponent对象的获取方式是不同的。对于非Spring环境，直接通过class反射生成相应对象；
+	 * 而对于Spring环境，需要从IOC容器中获取已经配置的NodeComponent对象。
+	 */
 	public static void addNode(Node node) {
-		if (node != null) {
-			nodeMap.put(node.getId(), node);
+		if (node == null || StrUtil.isBlank(node.getId()) || node.getClazz() == null || node.getType() == null) {
+			return;
 		}
-	}
-
-	public static void addNode(String nodeId, Class<?> clazz, NodeType type) {
-		nodeMap.put(nodeId, new Node(nodeId, clazz, type));
+		try {
+			Class<?> clazz = node.getClazz();
+			String id = node.getId();
+			NodeComponent nodeComponent;
+			// 这里通过spi来判断是否是Spring环境
+			FlowContext context = FlowContextHolder.getContext();
+			if (LocalFlowContext.class.isAssignableFrom(context.getClass())) {
+				// 在非Spring环境下，需要newInstance
+				nodeComponent = (NodeComponent) clazz.newInstance();
+				node.setNodeComponent(nodeComponent);
+			} else {
+				// 在Spring环境下，已经保证了Node#nodeComponent被设置了，所以不需要做任何处理
+				// nodeComponent = (NodeComponent) context.getBean(id, clazz);
+			}
+			nodeMap.put(id, node);
+		} catch (Exception e) {
+			throw new SystemInitializeException(e);
+		}
 	}
 
 	public static Node getNode(String nodeId) {
 		return nodeMap.get(nodeId);
 	}
 
-	public static void addChain(String chainId, List<Flow> flowList) {
-		chainMap.put(chainId, new Chain(chainId, flowList));
+	public static boolean containNode(String nodeId) {
+		return nodeMap.containsKey(nodeId);
 	}
 
+
 	public static void addChain(Chain chain) {
-		if (chain != null) {
+		if (chain != null && StrUtil.isNotBlank(chain.getId())) {
 			chainMap.put(chain.getId(), chain);
 		}
 	}
