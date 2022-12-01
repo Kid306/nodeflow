@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
 		<artifactId>nodeflow</artifactId>
-		<groupId>com.kid.nodeflow</groupId>
+		<groupId>store.lunangangster</groupId>
 		<version>${revision}</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
@@ -13,19 +13,8 @@
 
 
 	<dependencies>
-		<!--nodeflow-core-->
-		<!--<dependency>-->
-		<!--	<groupId>com.kid.nodeflow</groupId>-->
-		<!--	<artifactId>nodeflow-core</artifactId>-->
-		<!--	<version>${revision}</version>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-		<!--	<groupId>com.kid.nodeflow</groupId>-->
-		<!--	<artifactId>nodeflow-spring</artifactId>-->
-		<!--	<version>${revision}</version>-->
-		<!--</dependency>-->
 		<dependency>
-			<groupId>com.kid.nodeflow</groupId>
+			<groupId>store.lunangangster</groupId>
 			<artifactId>nodeflow-boot-starter</artifactId>
 			<version>${revision}</version>
 		</dependency>
